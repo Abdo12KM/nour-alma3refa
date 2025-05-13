@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nour al-Ma'rifa (نور المعرفة) - Light of Knowledge
+
+A Progressive Web App (PWA) aimed at addressing foundational illiteracy in Egypt through an innovative, voice-centric, and gamified learning experience for illiterate and semi-literate Egyptian adults.
+
+## Project Vision
+
+Nour al-Ma'rifa addresses the challenge of foundational illiteracy in Egypt by offering an accessible, effective, and empowering way to learn basic Arabic literacy (letters and numbers). By using intuitive design, localized AI tools, and audio interaction, we make the first steps into literacy and digital interaction as easy and encouraging as possible.
+
+## Key Features
+
+- **Voice-First Interaction**: Uses clear audio prompts in Egyptian Arabic for navigation, lessons, instructions, and feedback.
+- **AI-Powered Personalization**: Generates culturally relevant examples and processes user voice inputs for feedback.
+- **Accessible UI/UX**: Large icons, high contrast colors, minimal text, and simple navigation.
+- **Gamification**: Points, badges, and progress tracking to boost motivation.
+- **Image-Based Authentication**: Simple registration using image sequences instead of text.
+
+## Core Learning Modules
+
+- **Arabic Letters**: Learn to recognize and pronounce Arabic letters (أ, ب, ت, etc.)
+- **Numbers**: Learn basic numerals (0-5) with visual and audio support
+
+## Technology Stack
+
+- **Frontend**: Next.js 14+ (App Router), Tailwind CSS, Shadcn UI
+- **Backend**: Next.js API Routes
+- **Database**: PostgreSQL with Drizzle ORM
+- **AI/ML**: Google Gemini API (Speech-to-Text, Text Generation)
+- **TTS**: EGTTS V0.1 for Egyptian Arabic text-to-speech
+- **Deployment**: Vercel (Frontend/Backend), Neon (Database)
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+3. Set up environment variables (see `.env.example`)
+4. Run the development server:
+   ```bash
+   pnpm dev
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Project Structure
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `app/` - Next.js App Router pages and layouts
+- `components/` - Reusable UI components 
+- `lib/` - Utility functions and shared logic
+- `lib/db/` - Database schemas and query functions
+- `public/` - Static assets and PWA manifest
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Screenshots
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+(Coming soon)
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
+MIT
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Acknowledgements
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The EGTTS V0.1 model for Egyptian Arabic text-to-speech
+- Google Gemini API for AI capabilities
+- Next.js, Tailwind CSS, and Shadcn UI for development frameworks
