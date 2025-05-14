@@ -77,16 +77,22 @@ export function AudioButton({
   // Determine if button should be disabled
   // Button is disabled when audio is playing OR if disabled prop is passed
   const buttonDisabled = isPlaying || disabled;
+  // Preserve the original variant from props
+  const originalVariant = props.variant || 'default';
   
-  // Determine the variant based on ready state
-  const buttonVariant = isReadyForAction ? 'selected' : (props.variant || 'default');
-  
+  // Apply the selected styling using className instead of changing the variant
+  // Use both pulse and bounce animations for more noticeable effect
   return (
     <Button 
-      className={`${className} transition-all ${isReadyForAction ? 'relative z-10' : ''}`}
+      className={`${className} transition-all ${
+        isReadyForAction 
+          ? 'relative z-10 ring-2 ring-primary shadow-md animate-button-bounce scale-105' 
+          : ''
+      }`}
       onClick={handleClick}
       disabled={buttonDisabled}
-      variant={buttonVariant as any}
+      variant={originalVariant as any}
+      data-active={isReadyForAction}
       {...props}
     >
       {icon}

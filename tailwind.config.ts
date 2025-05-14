@@ -7,15 +7,19 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],  theme: {
-  	extend: {
-      keyframes: {
+  	extend: {      keyframes: {
         'button-pulse': {
           '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.05)' },
+          '50%': { transform: 'scale(1.08)' },
         },
+        'button-bounce': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-4px)' },
+        }
       },
       animation: {
-        'button-pulse': 'button-pulse 2s ease-in-out infinite',
+        'button-pulse': 'button-pulse 1.5s ease-in-out infinite',
+        'button-bounce': 'button-bounce 1.5s ease-in-out infinite',
       },
   		colors: {
   			background: 'hsl(var(--background))',

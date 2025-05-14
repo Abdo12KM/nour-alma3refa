@@ -33,8 +33,7 @@ export const useAudioStore = create<AudioState>((set, get) => ({
       currentAudio: audio,
       activeButtonId: buttonId || null, // Set the active button if provided
     });
-    
-    // Play the audio
+      // Play the audio
     audio.play().catch(error => {
       console.error('Audio playback failed:', error);
       // Reset isPlaying state on error
@@ -43,7 +42,11 @@ export const useAudioStore = create<AudioState>((set, get) => ({
     
     // Handle audio end
     audio.addEventListener('ended', () => {
-      set({ isPlaying: false });
+      // Update active button ID first (keeping the same button active after audio ends)
+      set({ 
+        isPlaying: false,
+        activeButtonId: buttonId || null // Maintain the active button ID
+      });
       
       // Call the onAudioEnd callback
       if (onAudioEnd) {
