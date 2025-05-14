@@ -6,29 +6,11 @@ export const badgeTypeEnum = pgEnum("badge_type", ["letter_completion", "number_
 // Users table - stores user information and authentication
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  name: text("name"),
-  pin: varchar("pin", { length: 4 }),
+  name: text("name").notNull(),
+  pin: varchar("pin", { length: 4 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   points: integer("points").default(0).notNull(),
-  isActive: boolean("is_active").default(true).notNull(),
-});
-
-// Image-based authentication sequences 
-export const authImages = pgTable("auth_images", {
-  id: serial("id").primaryKey(),
-  imageUrl: text("image_url").notNull(),
-  label: text("label").notNull(),
-  isActive: boolean("is_active").default(true).notNull(),
-});
-
-// User authentication sequences
-export const userAuthSequences = pgTable("user_auth_sequences", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  sequence: jsonb("sequence").notNull(), // Array of image IDs in correct order
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
   isActive: boolean("is_active").default(true).notNull(),
 });
 

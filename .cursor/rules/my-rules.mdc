@@ -5,33 +5,149 @@ alwaysApply: true
 ---
 # Project: Nour al-Ma'rifa - Custom AI Instructions
 
-## 1. Core Context Comprehension:
-   - **ALWAYS** begin by thoroughly reading and understanding the following documents to grasp the complete project context before generating code, making technical decisions, or answering questions:
-     - `PROJECT_DESCR.md`: For the overall project vision, detailed requirements, features (MVP and future), target audience, technology stack, architecture, design principles, and specific workflows (like the Arabic Letter "ب" lesson design). This is the primary source of truth for "what" and "why".
-     - `PROGRESS.md`: To understand the current development status, already implemented features, and any noted implementation details or challenges. This helps avoid re-implementing work or suggesting things already decided against.
-     - `PROMPTS.md`: For the structured, sequential development plan. This outlines the "how" and the order of tasks.
+## Project Overview
 
-## 2. Development and Coding Workflow:
-   - When a task based on an entry in `PROMPTS.md` is requested:
-     - Focus **exclusively** on fulfilling the requirements of that specific prompt.
-     - Ensure all generated code and solutions are **fully consistent** with the technology stack (Next.js 14+ App Router, TypeScript, Tailwind CSS, Shadcn UI, Drizzle ORM with PostgreSQL, EGTTS V0.1, Google Gemini API) and the UI/UX design principles (voice-first, accessibility, simplicity, cultural relevance) detailed in `PROJECT_DESCR.md`.
-     - For any database-related tasks, refer to the schema details in `PROJECT_DESCR.md` (Section 5 and any implicit schema details in feature descriptions) and any existing Drizzle schema files (e.g., `src/lib/db/schema.ts` if created). Adhere strictly to Drizzle ORM practices.
+**THIS APP IS IN ARABIC LANGUAGE ONLY. NO ENGLISH WORDS SHOULD APPEAR IN THE UI ITSELF.**
 
-## 3. Documentation and Progress Updates:
-   - After successfully implementing a significant feature or completing a milestone outlined in `PROMPTS.md`:
-     - **Proactively suggest an update to `PROGRESS.md`**. This should include marking the relevant task(s) as complete (e.g., changing 🔲 to ✅) and adding brief, relevant notes about the implementation or any key decisions made.
-     - If database schema modifications were part of the task, ensure these changes are accurately reflected in Drizzle schema files and consider if a note in `PROGRESS.md` or `PROJECT_DESCR.md` is necessary for clarity.
+## Development Guidelines
 
-## 4. Code Quality and Adherence to Standards:
-   - Generate code that is modular, clean, well-commented (where non-obvious), and follows established best practices for the specified technologies.
-   - **Always use `pnpm`** for package management commands, as per standing project instructions.
+### 1. Core Context Comprehension
+- **ALWAYS** begin by thoroughly reading and understanding the following documents to grasp the complete project context before generating code, making technical decisions, or answering questions:
+  - `PROJECT_DESCR.md`: For the overall project vision, detailed requirements, features (MVP and future), target audience, technology stack, architecture, design principles, and specific workflows (like the Arabic Letter "ب" lesson design). This is the primary source of truth for "what" and "why".
+  - `PROGRESS.md`: To understand the current development status, already implemented features, and any noted implementation details or challenges. This helps avoid re-implementing work or suggesting things already decided against.
 
-## 5. Clarification and Verification:
-   - If a user request is ambiguous, appears to conflict with the established information in `PROJECT_DESCR.md`, `PROGRESS.md`, or `PROMPTS.md`, or seems to deviate significantly from the planned development path:
-     - **Seek clarification** from the user before proceeding with implementation.
-     - Briefly explain the perceived conflict or ambiguity by referencing the relevant document.
+### 2. Development and Coding Workflow
+  - Focus **exclusively** on fulfilling the requirements of the specific prompt.
+  - Ensure all generated code and solutions are **fully consistent** with the technology stack (Next.js 14+ App Router, TypeScript, Tailwind CSS, Shadcn UI, Drizzle ORM with PostgreSQL, EGTTS V0.1, Google Gemini API) and the UI/UX design principles (voice-first, accessibility, simplicity, cultural relevance) detailed in `PROJECT_DESCR.md`.
+  - For any database-related tasks, refer to the schema details in `PROJECT_DESCR.md` (Section 5 and any implicit schema details in feature descriptions) and any existing Drizzle schema files (e.g., `src/lib/db/schema.ts` if created). Adhere strictly to Drizzle ORM practices.
 
-## 6. Learning and Adaptation:
-   - Treat the `PROJECT_DESCR.md`, `PROGRESS.md`, and `PROMPTS.md` files as your primary "memory bank" for this project, similar to the "Cline Memory Bank" concept discussed in the Reddit threads.
+### 3. Documentation and Progress Updates
+- After successfully implementing a significant feature or completing a milestone:
+  - **Proactively suggest an update to `PROGRESS.md`**. This should include marking the relevant task(s) as complete (e.g., changing 🔲 to ✅) and adding brief, relevant notes about the implementation or any key decisions made.
+  - If database schema modifications were part of the task, ensure these changes are accurately reflected in Drizzle schema files and consider if a note in `PROGRESS.md` or `PROJECT_DESCR.md` is necessary for clarity.
 
-   - Pay attention to user feedback on previously generated code or suggestions to improve future responses.
+### 4. Code Quality and Adherence to Standards
+- Generate code that is modular, clean, well-commented (where non-obvious), and follows established best practices for the specified technologies.
+- **Always use `pnpm`** for package management commands, as per standing project instructions.
+
+### 5. Clarification and Verification
+- If a user request is ambiguous, appears to conflict with the established information in `PROJECT_DESCR.md`, `PROGRESS.md`, or seems to deviate significantly from the planned development path:
+  - **Seek clarification** from the user before proceeding with implementation.
+  - Briefly explain the perceived conflict or ambiguity by referencing the relevant document.
+
+### 6. Learning and Adaptation
+- Treat the `PROJECT_DESCR.md`, `PROGRESS.md`, files as your primary "memory bank" for this project, similar to the "Cline Memory Bank" concept discussed in the Reddit threads.
+- Pay attention to user feedback on previously generated code or suggestions to improve future responses.
+
+## UI and Language Requirements
+
+### Arabic-Only UI
+- THIS APP IS IN ARABIC LANGUAGE ONLY. ALL USER-FACING TEXT MUST BE IN ARABIC.
+- No English words should appear in the UI itself.
+- Component names, variable names, and code comments can remain in English.
+
+### Audio Guidance and Accessibility
+- The app is designed for users with limited literacy, so audio guidance is essential.
+- All interactive elements (buttons, inputs) must have audio instructions.
+- Audio should be in Egyptian Arabic dialect, clear and simple language.
+
+### Two-Click Button Interaction
+- All buttons in the app must follow a two-step interaction pattern:
+  1. First click: Play an audio instruction/description
+  2. Second click (within 30 seconds): Perform the actual action
+- After 30 seconds, the button resets to the first step.
+- Always include visual indicators when a button is in the "ready for action" state.
+- **IMPORTANT**: Buttons must be disabled while audio is playing. The user should not be able to click the button again until the audio has finished playing.
+- Once audio finishes playing, the button should become enabled again with a visual indicator showing it's ready for the action click.
+
+### RTL Layout and UI Elements
+- All UI must be right-to-left (RTL) aligned for Arabic.
+- Use appropriate spacing and layout to ensure proper RTL display.
+- Icons should be placed on the appropriate side (usually right side in RTL).
+- Button content should follow RTL ordering (icon on right, text on left).
+
+### Icon Usage for Clarity
+- Buttons should include clear, recognizable icons to assist non-literate users.
+- Choose icons that are culturally appropriate and easily understood.
+- Ensure high contrast and sufficient size for all UI elements.
+
+### Voice Input for Text Fields
+- Whenever text input is needed, use voice recording instead of keyboard input.
+- Provide clear audio instructions before recording starts.
+- Always include a visual indicator during recording.
+- Allow confirming or re-recording before proceeding.
+
+### Audio Files Management
+- Audio files should be stored in the `/public/audio/` directory.
+- Follow the naming scheme documented in AUDIO_FILES.md.
+- Audio files should be short, clear, and with good quality.
+- Essential audio includes: button instructions, welcome messages, and feedback. 
+- Audio files should use .wav format rather than .mp3 for consistency.
+
+## Technology Reference
+
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:pull": "drizzle-kit pull",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+
+### ShadCN Components
+- Install components using: `pnpm dlx shadcn@latest add [component-name]`
+- Available components:
+  - Accordion
+  - Alert
+  - Alert Dialog
+  - Aspect Ratio
+  - Avatar
+  - Badge
+  - Breadcrumb
+  - Button
+  - Calendar
+  - Card
+  - Carousel
+  - Chart
+  - Checkbox
+  - Collapsible
+  - Combobox
+  - Command
+  - Context Menu
+  - Data Table
+  - Date Picker
+  - Dialog
+  - Drawer
+  - Dropdown Menu
+  - Form
+  - Hover Card
+  - Input
+  - Input OTP
+  - Label
+  - Menubar
+  - Navigation Menu
+  - Pagination
+  - Popover
+  - Progress
+  - Radio Group
+  - Resizable
+  - Scroll Area
+  - Select
+  - Separator
+  - Sheet
+  - Sidebar
+  - Skeleton
+  - Slider
+  - Sonner
+  - Switch
+  - Table
+  - Tabs
+  - Textarea
+  - Toast
+  - Toggle
+  - Toggle Group
+  - Tooltip

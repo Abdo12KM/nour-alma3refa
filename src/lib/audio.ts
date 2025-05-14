@@ -1,0 +1,85 @@
+import { create } from 'zustand';
+
+export interface AudioState {
+  isPlaying: boolean;
+  currentAudio: HTMLAudioElement | null;
+  timeoutId: NodeJS.Timeout | null;
+  
+  // Actions
+  playSound: (audioPath: string, onAudioEnd: () => void) => void;
+  stopSound: () => void;
+}
+
+export const useAudioStore = create<AudioState>((set, get) => ({
+  isPlaying: false,
+  currentAudio: null,
+  timeoutId: null,
+
+  playSound: (audioPath, onAudioEnd) => {
+    const { stopSound } = get();
+    
+    // Clean up previous audio if any
+    stopSound();
+    
+    // Create new audio element
+    const audio = new Audio(audioPath);
+    
+    // Update state first to indicate we're starting playback
+    set({
+      isPlaying: true,
+      currentAudio: audio,
+    });
+    
+    // Play the audio
+    audio.play().catch(error => {
+      console.error('Audio playback failed:', error);
+      // Reset isPlaying state on error
+      set({ isPlaying: false });
+    });
+    
+    // Handle audio end
+    audio.addEventListener('ended', () => {
+      set({ isPlaying: false });
+      
+      // Call the onAudioEnd callback
+      if (onAudioEnd) {
+        onAudioEnd();
+      }
+    });
+    
+    // Add error handler
+    audio.addEventListener('error', () => {
+      console.error('Audio playback error occurred');
+      set({ isPlaying: false });
+    });
+  },
+  
+  stopSound: () => {
+    const { currentAudio, timeoutId } = get();
+    
+    // Stop current audio if playing
+    if (currentAudio) {
+      try {
+        // Only try to pause if the audio is actually playing
+        if (!currentAudio.paused && currentAudio.readyState > 0) {
+          currentAudio.pause();
+        }
+        currentAudio.currentTime = 0;
+      } catch (error) {
+        console.warn('Error stopping audio:', error);
+      }
+    }
+    
+    // Clear timeout if exists
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    
+    // Reset state
+    set({
+      isPlaying: false,
+      currentAudio: null,
+      timeoutId: null,
+    });
+  }
+})); 

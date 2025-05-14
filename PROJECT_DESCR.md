@@ -50,13 +50,16 @@ Specific features for the 3-day hackathon:
 - Minimal text, focusing only on letters/numbers being taught and essential icons.
 
 ### 4.2. Simplified User Registration & Authentication
-- **Primary Method (Image-Based)**:
-    - Registration: User picks 3 images from a grid (~12 common images) guided by voice ("Choose 3 pictures you will remember"). Sequence and image IDs are stored.
-    - Login: User sees the same grid and is prompted ("Tap your 3 pictures in the correct order"). Tapping the correct sequence grants access.
-    - Rationale: Avoids text input, uses visual recognition.
-- **Alternative (Assisted Text-Based - Optional)**:
-    - Registration: A literate helper enters the user's first name. System gives a simple 4-digit PIN. Name and PIN stored. Voice guides the helper.
-    - Login: User (or helper) enters the 4-digit PIN using a large keypad.
+- **PIN-Based Authentication System**:
+  - **Dual Registration Methods**:
+    - **Text-Based**: A user (or helper) enters the user's name and creates a 4-digit PIN. System generates a unique numeric ID for future login.
+    - **Voice-Based**: User speaks their name (recorded via microphone), then creates a 4-digit PIN. System generates a unique numeric ID for future login.
+  - **Dual Login Methods**:
+    - **Text-Based**: User enters their unique numeric ID and 4-digit PIN using a large keypad.
+    - **Voice-Based**: User speaks their unique numeric ID, then enters their 4-digit PIN.
+  - **User ID System**: Each user receives a unique numeric ID during registration (auto-incremented sequence). This ID is prominently displayed for the user to remember.
+  - **PIN Security**: Simple 4-digit PIN is easy to remember but provides basic security.
+  - **Rationale**: Supports both literate and illiterate users with appropriate authentication methods.
 - **Persistent Login**: Use browser storage (localStorage/sessionStorage) to keep the user logged in on their device.
 
 ### 4.3. Core Learning Modules (MVP Content)
@@ -170,13 +173,15 @@ Specific features for the 3-day hackathon:
 - **Challenge: Camera Integration for Handwriting.**
     - Mitigation (MVP): Defer entirely. Too complex for the short scope.
 - **Challenge: User Registration for Illiterate Users (Usability vs. Security).**
-    - Mitigation (MVP): Prioritize image-based sequence auth (3 images from ~12). Accept lower security for this context. Implement persistent login. Assisted text/PIN is secondary.
+    - Mitigation (MVP): Dual-path authentication system with PIN-based security. Text-based method for literate users, voice-based for illiterate users. Each user gets a unique numeric ID for easy reference and login. Accept lower security for this context (4-digit PIN). Implement persistent login to minimize authentication frequency.
 - **Challenge: Scope of Learning Content.**
     - Mitigation (MVP): Strictly limit letters (3-5) and numbers (0-5) for a demonstrable end-to-end flow. Quality over quantity.
 - **Challenge: EGTTS & Gemini API Reliability/Latency.**
     - Mitigation (MVP): Basic error handling (try-catch), user feedback on failure, loading indicators. Ensure stable internet for demo, potentially have static fallbacks. Optimize backend speed.
 - **Challenge: Accurate Pronunciation Analysis.**
     - Mitigation (MVP): Rely on Gemini STT. Simple analysis: check for exact/close matches to target sound/name. Focus on positive feedback.
+- **Challenge: Speech-to-Text Recognition for User IDs.**
+    - Mitigation (MVP): Implement simple numeric recognition for spoken IDs. Use client-side speech recognition with fallback UI if recognition fails. Provide visual confirmation of recognized numbers.
 
 ## 10. Design Principles
 - Voice-First: Audio is the main way to interact.

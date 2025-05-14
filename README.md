@@ -12,7 +12,10 @@ Nour al-Ma'rifa addresses the challenge of foundational illiteracy in Egypt by o
 - **AI-Powered Personalization**: Generates culturally relevant examples and processes user voice inputs for feedback.
 - **Accessible UI/UX**: Large icons, high contrast colors, minimal text, and simple navigation.
 - **Gamification**: Points, badges, and progress tracking to boost motivation.
-- **Image-Based Authentication**: Simple registration using image sequences instead of text.
+- **Dual Authentication System**: 
+  - Text-based registration and login with name, PIN, and unique ID
+  - Voice-based registration and login for users who cannot read
+  - Simple PIN-based security with unique numeric IDs for each user
 
 ## Core Learning Modules
 

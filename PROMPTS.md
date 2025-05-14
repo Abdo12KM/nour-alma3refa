@@ -20,8 +20,8 @@ Set up Drizzle ORM with PostgreSQL for the project. Create:
 - Connection utility
 - User schema with fields for:
   - id (primary key)
-  - name (default 'Learner')
-  - image_sequence (for image-based auth)
+  - name
+  - pin (4-digit numeric PIN)
   - points (for gamification)
   - progress (JSON for tracking completed lessons)
 - Migration script
@@ -29,30 +29,53 @@ Set up Drizzle ORM with PostgreSQL for the project. Create:
 
 ## Authentication System
 
-### 3. Image-Based Registration
+### 3. Text-Based Registration
 ```
-Create a registration page with:
-- A 3x4 grid of 12 distinct, culturally relevant images
-- Ability to select 3 images in sequence
-- Clear visual indication of selection
+Create a text-based registration page with:
+- Input field for user name
+- PIN creation interface (4-digit numeric)
+- Clear visual feedback and validation
 - Large, accessible submit button
 - Voice guidance via EGTTS
-- Store the sequence in the database
+- Store user data in the database
+- Display unique user ID for future login
 ```
 
-### 4. Image-Based Login
+### 4. Voice-Based Registration
 ```
-Create a login page that:
-- Shows the same grid of 12 images
-- Allows selecting 3 images in sequence
-- Compares with stored sequence in DB
+Create a voice-based registration flow that:
+- Records user's name using microphone
+- Provides clear audio instructions and feedback
+- Offers PIN creation interface
+- Processes speech using Gemini API
+- Stores user data in the database
+- Clearly displays the user's unique ID number for future login
+```
+
+### 5. Text-Based Login
+```
+Create a text-based login page that:
+- Asks for user ID (numeric)
+- Requests 4-digit PIN
+- Validates credentials against database
 - Provides audio feedback on success/failure
 - Uses localStorage to maintain session
 ```
 
+### 6. Voice-Based Login
+```
+Create a voice-based login flow that:
+- Records user speaking their ID number
+- Processes speech to extract the numeric ID
+- Requests PIN input via touchscreen
+- Validates credentials against database
+- Provides clear audio feedback
+- Maintains session state
+```
+
 ## Core Navigation
 
-### 5. Main Menu
+### 7. Main Menu
 ```
 Design a voice-guided main menu with:
 - Large, icon-based buttons for:
@@ -66,7 +89,7 @@ Design a voice-guided main menu with:
 
 ## Learning Modules
 
-### 6. Letter Lesson Framework
+### 8. Letter Lesson Framework
 ```
 Create a reusable letter lesson component that:
 - Displays a single Arabic letter (e.g., أ) in large format
@@ -76,7 +99,7 @@ Create a reusable letter lesson component that:
 - Prepares for integration with pronunciation practice
 ```
 
-### 7. Pronunciation Practice
+### 9. Pronunciation Practice
 ```
 Add pronunciation practice to the letter lesson:
 - Microphone recording button
@@ -87,7 +110,7 @@ Add pronunciation practice to the letter lesson:
 - Points award on successful pronunciation
 ```
 
-### 8. Letter Identification Quiz
+### 10. Letter Identification Quiz
 ```
 Create a letter identification quiz that:
 - Shows 3 learned letters
@@ -98,7 +121,7 @@ Create a letter identification quiz that:
 - Updates progress in database
 ```
 
-### 9. Number Lesson Framework
+### 11. Number Lesson Framework
 ```
 Create a number lesson component similar to letters:
 - Displays Arabic numeral (٠-٥) in large format
@@ -108,7 +131,7 @@ Create a number lesson component similar to letters:
 - Consistent UI with letter lessons
 ```
 
-### 10. Number Identification Quiz
+### 12. Number Identification Quiz
 ```
 Add a number quiz similar to letter quiz:
 - Shows 3 learned numbers
@@ -120,7 +143,7 @@ Add a number quiz similar to letter quiz:
 
 ## Gamification
 
-### 11. Progress Tracking System
+### 13. Progress Tracking System
 ```
 Implement a progress tracking system:
 - Database updates on lesson/quiz completion
@@ -132,7 +155,7 @@ Implement a progress tracking system:
 
 ## Utility Services
 
-### 12. EGTTS Integration
+### 14. EGTTS Integration
 ```
 Set up the EGTTS integration:
 - API client for Egyptian TTS
@@ -142,7 +165,7 @@ Set up the EGTTS integration:
 - Queue system for sequential announcements
 ```
 
-### 13. Gemini API Integration
+### 15. Gemini API Integration
 ```
 Implement Gemini API integration for:
 - Speech-to-text processing
@@ -154,7 +177,7 @@ Implement Gemini API integration for:
 
 ## PWA Features
 
-### 14. PWA Configuration
+### 16. PWA Configuration
 ```
 Set up Progressive Web App features:
 - Web manifest with icons and metadata
@@ -165,10 +188,10 @@ Set up Progressive Web App features:
 
 ## Final Integration
 
-### 15. Complete User Journey
+### 17. Complete User Journey
 ```
 Connect all components into a cohesive flow:
-- Registration → Login → Menu → Lessons → Quizzes → Progress
+- Registration (text/voice) → Login (text/voice) → Menu → Lessons → Quizzes → Progress
 - Ensure data persistence throughout
 - Test voice guidance continuity
 - Verify points accumulation
@@ -177,7 +200,7 @@ Connect all components into a cohesive flow:
 
 ## Additional Prompts for Future Expansion
 
-### 16. Handwriting Recognition
+### 18. Handwriting Recognition
 ```
 Add handwriting practice using:
 - Camera capture for written letters
@@ -186,7 +209,7 @@ Add handwriting practice using:
 - Guided practice exercises
 ```
 
-### 17. Word Building
+### 19. Word Building
 ```
 Create word building exercises:
 - Combine learned letters into simple words
@@ -195,7 +218,7 @@ Create word building exercises:
 - Real-world application examples
 ```
 
-### 18. Offline Functionality
+### 20. Offline Functionality
 ```
 Enhance offline capabilities:
 - Complete lesson content caching
@@ -206,13 +229,11 @@ Enhance offline capabilities:
 
 ---
 
-## Inspiration from Grok
-
-Based on the AI-generated prompts provided, consider these additional structured approaches:
+## Development Plan
 
 ### Day 1 Focus
 - Complete project setup and database configuration
-- Build the image-based authentication system
+- Build the PIN-based authentication system with dual text/voice paths
 - Create the main menu with basic navigation
 
 ### Day 2 Focus
