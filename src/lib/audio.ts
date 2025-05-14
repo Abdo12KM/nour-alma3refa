@@ -4,18 +4,21 @@ export interface AudioState {
   isPlaying: boolean;
   currentAudio: HTMLAudioElement | null;
   timeoutId: NodeJS.Timeout | null;
+  activeButtonId: string | null; // Track which button is currently active
   
   // Actions
-  playSound: (audioPath: string, onAudioEnd: () => void) => void;
+  playSound: (audioPath: string, onAudioEnd: () => void, buttonId?: string) => void;
   stopSound: () => void;
+  clearActiveButton: () => void;
 }
 
 export const useAudioStore = create<AudioState>((set, get) => ({
   isPlaying: false,
   currentAudio: null,
   timeoutId: null,
+  activeButtonId: null,
 
-  playSound: (audioPath, onAudioEnd) => {
+  playSound: (audioPath, onAudioEnd, buttonId = '') => {
     const { stopSound } = get();
     
     // Clean up previous audio if any
@@ -28,6 +31,7 @@ export const useAudioStore = create<AudioState>((set, get) => ({
     set({
       isPlaying: true,
       currentAudio: audio,
+      activeButtonId: buttonId || null, // Set the active button if provided
     });
     
     // Play the audio
@@ -81,5 +85,9 @@ export const useAudioStore = create<AudioState>((set, get) => ({
       currentAudio: null,
       timeoutId: null,
     });
+  },
+  
+  clearActiveButton: () => {
+    set({ activeButtonId: null });
   }
-})); 
+}));

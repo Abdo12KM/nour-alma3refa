@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageWrapper } from '@/components/ui/page-wrapper';
 import { useAudioStore } from '@/lib/audio';
 
 interface AuthLayoutProps {
@@ -32,17 +33,18 @@ export function AuthLayout({ title, children, welcomeAudioSrc }: AuthLayoutProps
       stopSound();
     };
   }, [welcomeAudioSrc, playSound, stopSound]);
-  
-  return (
-    <div dir="rtl" className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-primary/10 to-secondary/10 p-4">
-      <Card className="mx-auto w-full max-w-lg">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-3xl font-bold">{title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {children}
-        </CardContent>
-      </Card>
-    </div>
+    return (
+    <PageWrapper>
+      <div dir="rtl" className="w-full max-w-lg">
+        <Card className="mx-auto w-full">
+          <CardHeader className="space-y-1 text-center">
+            <CardTitle className="text-3xl font-bold">{title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {children}
+          </CardContent>
+        </Card>
+      </div>
+    </PageWrapper>
   );
 } 

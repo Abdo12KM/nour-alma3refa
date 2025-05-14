@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/auth";
 import { useAudioStore } from "@/lib/audio";
 import { AudioButton } from "@/components/ui/audio-button";
+import { PageWrapper } from "@/components/ui/page-wrapper";
 import { BookOpenIcon, Calculator, LogOutIcon, UserIcon, LogInIcon, UserPlusIcon, Volume2Icon } from "lucide-react";
 
 export default function Home() {
@@ -56,7 +57,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-primary/10 to-secondary/10 p-6">
+    <PageWrapper>
       <main dir="rtl" className="flex w-full max-w-md flex-col items-center space-y-8 text-center">
         <h1 className="text-4xl font-bold">نور المعرفة</h1>
 
@@ -126,6 +127,6 @@ export default function Home() {
           </div>
         )}
       </main>
-    </div>
+    </PageWrapper>
   );
 }
