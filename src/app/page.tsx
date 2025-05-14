@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/auth";
 import { useAudioStore } from "@/lib/audio";
 import { AudioButton } from "@/components/ui/audio-button";
+import { Button } from "@/components/ui/button";
 import { PageWrapper } from "@/components/ui/page-wrapper";
 import { BookOpenIcon, Calculator, LogOutIcon, UserIcon, LogInIcon, UserPlusIcon, Volume2Icon } from "lucide-react";
 
@@ -63,9 +64,25 @@ export default function Home() {
 
         {isAuthenticated ? (
           <>
-            <p className="text-2xl">مرحباً بك {username || "متعلم"}</p>
-
-            <div className="grid w-full grid-cols-1 gap-4">
+            <p className="text-2xl">مرحباً بك {username || "متعلم"}</p>            <div className="grid w-full grid-cols-1 gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Button
+                  onClick={() => router.push("/learn")}
+                  className="py-6 text-lg font-bold"
+                  variant="default"
+                >
+                  اختيار الدروس
+                </Button>
+                
+                <Button
+                  onClick={() => router.push("/lessons/words")}
+                  className="py-6 text-lg"
+                  variant="outline"
+                >
+                  الكلمات
+                </Button>
+              </div>
+            
               <AudioButton
                 audioSrc="/audio/start-letters-lesson.wav"
                 onAction={() => router.push("/lessons/letters")}
@@ -103,8 +120,7 @@ export default function Home() {
                 خروج
               </AudioButton>
             </div>
-          </>
-        ) : (
+          </>        ) : (
           <div className="grid w-full grid-cols-1 gap-4">
             <AudioButton
               audioSrc="/audio/login-button.wav"
@@ -123,7 +139,13 @@ export default function Home() {
               className="py-6 text-xl justify-start px-6"
             >
               تسجيل حساب جديد
-            </AudioButton>
+            </AudioButton>            {/* Temporary Guest Login Button - REMOVE BEFORE PRODUCTION */}
+            <Button
+              onClick={() => router.push("/learn")}
+              className="py-6 text-xl justify-center px-6 mt-4 bg-amber-500 hover:bg-amber-600 text-black font-bold border-2 border-amber-700 animate-button-pulse"
+            >
+              دخول كضيف (مؤقت)
+            </Button>
           </div>
         )}
       </main>

@@ -46,12 +46,12 @@ export function RecordNameStep({ onComplete }: RecordNameStepProps) {
         method: 'POST',
         body: formData
       });
-      
-      const data = await response.json();
+        const data = await response.json();
       
       if (!response.ok) {
         console.error('API error response:', data);
-        throw new Error(data.error || 'Speech recognition failed');
+        const errorMessage = data.message || data.error || data.details || 'Speech recognition failed';
+        throw new Error(errorMessage);
       }
       
       // Verify we actually got text back
@@ -59,12 +59,28 @@ export function RecordNameStep({ onComplete }: RecordNameStepProps) {
         throw new Error('لم يتم التعرف على أي نص في التسجيل الصوتي');
       }
       
-      return data.text;
-    } catch (error) {
+      return data.text;    } catch (error) {
       console.error('Speech recognition error:', error);
-      setError(typeof error === 'object' && error !== null && 'message' in error 
-        ? error.message as string 
-        : 'فشل التعرف على الصوت. الرجاء المحاولة مرة أخرى.');
+      
+      // Convert the error into a user-friendly message in Arabic
+      let errorMessage = 'فشل التعرف على الصوت. الرجاء المحاولة مرة أخرى.';
+      
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        const message = error.message as string;
+        
+        // Handle specific error cases
+        if (message.includes('Missing API credentials') || message.includes('API key')) {
+          errorMessage = 'الرجاء التحقق من إعدادات واجهة برمجة التطبيقات.';
+          console.error('API key configuration issue detected');
+        } else if (message.includes('network') || message.includes('timeout')) {
+          errorMessage = 'فشل الاتصال بالخادم. الرجاء التحقق من اتصال الإنترنت الخاص بك.';
+        } else {
+          // Use the error message directly if available
+          errorMessage = message;
+        }
+      }
+      
+      setError(errorMessage);
       return '';
     } finally {
       setIsProcessing(false);

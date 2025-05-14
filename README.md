@@ -12,7 +12,7 @@ Nour al-Ma'rifa addresses the challenge of foundational illiteracy in Egypt by o
 - **AI-Powered Personalization**: Generates culturally relevant examples and processes user voice inputs for feedback.
 - **Accessible UI/UX**: Large icons, high contrast colors, minimal text, and simple navigation.
 - **Gamification**: Points, badges, and progress tracking to boost motivation.
-- **Dual Authentication System**: 
+- **Dual Authentication System**:
   - Text-based registration and login with name, PIN, and unique ID
   - Voice-based registration and login for users who cannot read
   - Simple PIN-based security with unique numeric IDs for each user
@@ -20,7 +20,14 @@ Nour al-Ma'rifa addresses the challenge of foundational illiteracy in Egypt by o
 ## Core Learning Modules
 
 - **Arabic Letters**: Learn to recognize and pronounce Arabic letters (أ, ب, ت, etc.)
-- **Numbers**: Learn basic numerals (0-5) with visual and audio support
+- **Numbers**: Learn basic numerals (٠-٩) with visual and audio support
+- **Words**: Learn common Arabic words and phrases
+
+## Navigation Improvements
+
+- **Direct Navigation**: In addition to audio-guided navigation, the app now includes direct navigation buttons for improved user experience and accessibility.
+- **Module Selection Page**: A dedicated learning modules selection page allows users to choose between Letters, Numbers, and Words.
+- **Temporary Guest Access**: For testing purposes, a temporary guest login button is provided on the home page (to be removed before production).
 
 ## Technology Stack
 
@@ -38,16 +45,22 @@ Nour al-Ma'rifa addresses the challenge of foundational illiteracy in Egypt by o
    ```bash
    pnpm install
    ```
-3. Set up environment variables (see `.env.example`)
+3. Set up environment variables:
+   - Copy `.env.local.example` to `.env.local`
+   - Add your Google API key for Gemini API (see [API_SETUP.md](./API_SETUP.md) for details)
 4. Run the development server:
    ```bash
    pnpm dev
    ```
+5. Using the temporary Guest Login:
+   - For quick access to learning modules without registration, use the "Guest Login" button
+   - This will take you to the learning selection page with modules for Arabic letters, numbers, and words
+   - *Note: This button is intended for development/testing and will be removed in production*
 
 ## Project Structure
 
 - `app/` - Next.js App Router pages and layouts
-- `components/` - Reusable UI components 
+- `components/` - Reusable UI components
 - `lib/` - Utility functions and shared logic
 - `lib/db/` - Database schemas and query functions
 - `public/` - Static assets and PWA manifest

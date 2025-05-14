@@ -15,11 +15,21 @@ export default {
         'button-bounce': {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-4px)' },
+        },
+        'fadeInDown': {
+          '0%': { opacity: '0', transform: 'translateY(-10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'scaleIn': {
+          '0%': { opacity: '0', transform: 'scale(0.9)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
         }
-      },
-      animation: {
+      },      animation: {
         'button-pulse': 'button-pulse 1.5s ease-in-out infinite',
         'button-bounce': 'button-bounce 1.5s ease-in-out infinite',
+        'button-active': 'button-bounce 1.5s ease-in-out infinite',
+        'fadeIn': 'fadeInDown 0.7s ease-out',
+        'scaleIn': 'scaleIn 0.5s ease-out',
       },
   		colors: {
   			background: 'hsl(var(--background))',

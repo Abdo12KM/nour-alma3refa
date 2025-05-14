@@ -1,8 +1,7 @@
 {
   "name": "nour-alma3refa",
   "version": "0.1.0",
-  "private": true,
-  "scripts": {
+  "private": true,  "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -11,7 +10,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:pull": "drizzle-kit pull",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "test:api": "tsx scripts/test-gemini-api.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.18",

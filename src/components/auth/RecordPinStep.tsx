@@ -51,12 +51,12 @@ export function RecordPinStep({ onComplete, audioSrc, actionLabel }: RecordPinSt
         method: 'POST',
         body: formData
       });
-      
-      const data = await response.json();
+        const data = await response.json();
       
       if (!response.ok) {
         console.error('API error response:', data);
-        throw new Error(data.error || 'Speech recognition failed');
+        const errorMessage = data.message || data.error || data.details || 'Speech recognition failed';
+        throw new Error(errorMessage);
       }
       
       // Ensure the PIN is 4 digits
@@ -65,13 +65,34 @@ export function RecordPinStep({ onComplete, audioSrc, actionLabel }: RecordPinSt
         return pin;
       } else {
         throw new Error('Invalid PIN format');
-      }
-    } catch (error) {
+      }    } catch (error) {
       console.error('Speech recognition error:', error);
-      setError('يجب أن يكون الرقم السري 4 أرقام. الرجاء المحاولة مرة أخرى.');
       
-      // Provide audio feedback for invalid PIN
-      playSound('/audio/invalid-pin-format.wav', () => {
+      // Convert the error into a user-friendly message in Arabic
+      let errorMessage = 'يجب أن يكون الرقم السري 4 أرقام. الرجاء المحاولة مرة أخرى.';
+      let audioFeedbackPath = '/audio/invalid-pin-format.wav';
+      
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        const message = error.message as string;
+        
+        // Handle specific error cases
+        if (message.includes('Missing API credentials') || message.includes('API key')) {
+          errorMessage = 'الرجاء التحقق من إعدادات واجهة برمجة التطبيقات.';
+          audioFeedbackPath = '/audio/try-again.wav';
+          console.error('API key configuration issue detected');
+        } else if (message.includes('network') || message.includes('timeout')) {
+          errorMessage = 'فشل الاتصال بالخادم. الرجاء التحقق من اتصال الإنترنت الخاص بك.';
+          audioFeedbackPath = '/audio/try-again.wav';
+        } else if (!message.includes('Invalid PIN format')) {
+          // Use the error message directly if available and not related to PIN format
+          errorMessage = message;
+        }
+      }
+      
+      setError(errorMessage);
+      
+      // Provide audio feedback for the error
+      playSound(audioFeedbackPath, () => {
         // Audio finished playing callback
       });
       
