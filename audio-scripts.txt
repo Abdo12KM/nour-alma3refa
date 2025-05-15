@@ -1,0 +1,186 @@
+# نصوص التسجيلات الصوتية لدروس الحروف
+=================================
+
+# حرف الألف (أ)
+----------------
+
+## الملفات الأساسية (Basic Files - /letters/alef/)
+- letter-name.wav: "هذا حرف الألف"
+- letter-sound.wav: "صوت الحرف أَ"
+- letter-full-intro.wav: "هذا حرف الألف. اسمه ألف، وصوته أَ"
+
+## أشكال الحرف (Forms - /letters/alef/forms/)
+- initial.wav: "في أول الكلمة أ"
+- middle.wav: "في النص ـأـ"
+- final.wav: "في الآخر ـأ"
+- all-forms.wav: "حرف الألف ليه أشكال مختلفة. في أول الكلمة أ، وفي النص ـأـ، وفي الآخر ـأ"
+
+## التشكيل (Diacritics - /letters/alef/diacritics/)
+- fatha.wav: "أَ"
+- damma.wav: "أُ"
+- kasra.wav: "إِ"
+- sukoon.wav: "أْ"
+- all-sounds.wav: "اسمع الأصوات المختلفة لحرف الألف: أَ، أُ، إِ، أْ"
+
+## الكلمات (Words - /letters/alef/words/)
+- word1.wav: "أسد"
+- word2.wav: "أرنب"
+
+## تعليمات التمارين (Exercises - /letters/alef/exercises/)
+- find-letter.wav: "دور على حرف الألف ودوس عليه"
+- pronounce.wav: "قول معايا: أَ"
+- write-letter.wav: "اكتب حرف الألف"
+
+## رسائل التقييم (Feedback - /letters/alef/feedback/)
+- correct.wav: "ممتاز! برافو عليك"
+- try-again.wav: "حاول مرة كمان"
+- lesson-complete.wav: "برافو! خلصت درس حرف الألف"
+
+# حرف الباء (ب)
+----------------
+
+## الملفات الأساسية (Basic Files - /letters/ba/)
+- letter-name.wav: "هذا حرف الباء"
+- letter-sound.wav: "صوت الحرف بَ"
+- letter-full-intro.wav: "هذا حرف الباء. اسمه باء، وصوته بَ"
+
+## أشكال الحرف (Forms - /letters/ba/forms/)
+- initial.wav: "في أول الكلمة بـ"
+- middle.wav: "في النص ـبـ"
+- final.wav: "في الآخر ـب"
+- all-forms.wav: "حرف الباء ليه أشكال مختلفة. في أول الكلمة بـ، وفي النص ـبـ، وفي الآخر ـب"
+
+## التشكيل (Diacritics - /letters/ba/diacritics/)
+- fatha.wav: "بَ"
+- damma.wav: "بُ"
+- kasra.wav: "بِ"
+- sukoon.wav: "بْ"
+- all-sounds.wav: "اسمع الأصوات المختلفة لحرف الباء: بَ، بُ، بِ، بْ"
+
+## الكلمات (Words - /letters/ba/words/)
+- word1.wav: "باب"
+- word2.wav: "بطة"
+
+## تعليمات التمارين (Exercises - /letters/ba/exercises/)
+- find-letter.wav: "دور على حرف الباء ودوس عليه"
+- pronounce.wav: "قول معايا: بَ"
+- write-letter.wav: "اكتب حرف الباء"
+
+## رسائل التقييم (Feedback - /letters/ba/feedback/)
+- correct.wav: "ممتاز! برافو عليك"
+- try-again.wav: "حاول مرة كمان"
+- lesson-complete.wav: "برافو! خلصت درس حرف الباء"
+
+# حرف التاء (ت)
+----------------
+
+## الملفات الأساسية (Basic Files - /letters/ta/)
+- letter-name.wav: "هذا حرف التاء"
+- letter-sound.wav: "صوت الحرف تَ"
+- letter-full-intro.wav: "هذا حرف التاء. اسمه تاء، وصوته تَ"
+
+## أشكال الحرف (Forms - /letters/ta/forms/)
+- initial.wav: "في أول الكلمة تـ"
+- middle.wav: "في النص ـتـ"
+- final.wav: "في الآخر ـت"
+- all-forms.wav: "حرف التاء ليه أشكال مختلفة. في أول الكلمة تـ، وفي النص ـتـ، وفي الآخر ـت"
+
+## التشكيل (Diacritics - /letters/ta/diacritics/)
+- fatha.wav: "تَ"
+- damma.wav: "تُ"
+- kasra.wav: "تِ"
+- sukoon.wav: "تْ"
+- all-sounds.wav: "اسمع الأصوات المختلفة لحرف التاء: تَ، تُ، تِ، تْ"
+
+## الكلمات (Words - /letters/ta/words/)
+- word1.wav: "تفاح"
+- word2.wav: "تمساح"
+
+## تعليمات التمارين (Exercises - /letters/ta/exercises/)
+- find-letter.wav: "دور على حرف التاء ودوس عليه"
+- pronounce.wav: "قول معايا: تَ"
+- write-letter.wav: "اكتب حرف التاء"
+
+## رسائل التقييم (Feedback - /letters/ta/feedback/)
+- correct.wav: "ممتاز! برافو عليك"
+- try-again.wav: "حاول مرة كمان"
+- lesson-complete.wav: "برافو! خلصت درس حرف التاء"
+
+# حرف الثاء (ث)
+----------------
+
+## الملفات الأساسية (Basic Files - /letters/tha/)
+- letter-name.wav: "هذا حرف الثاء"
+- letter-sound.wav: "صوت الحرف ثَ"
+- letter-full-intro.wav: "هذا حرف الثاء. اسمه ثاء، وصوته ثَ"
+
+## أشكال الحرف (Forms - /letters/tha/forms/)
+- initial.wav: "في أول الكلمة ثـ"
+- middle.wav: "في النص ـثـ"
+- final.wav: "في الآخر ـث"
+- all-forms.wav: "حرف الثاء ليه أشكال مختلفة. في أول الكلمة ثـ، وفي النص ـثـ، وفي الآخر ـث"
+
+## التشكيل (Diacritics - /letters/tha/diacritics/)
+- fatha.wav: "ثَ"
+- damma.wav: "ثُ"
+- kasra.wav: "ثِ"
+- sukoon.wav: "ثْ"
+- all-sounds.wav: "اسمع الأصوات المختلفة لحرف الثاء: ثَ، ثُ، ثِ، ثْ"
+
+## الكلمات (Words - /letters/tha/words/)
+- word1.wav: "ثعلب"
+- word2.wav: "ثلج"
+
+## تعليمات التمارين (Exercises - /letters/tha/exercises/)
+- find-letter.wav: "دور على حرف الثاء ودوس عليه"
+- pronounce.wav: "قول معايا: ثَ"
+- write-letter.wav: "اكتب حرف الثاء"
+
+## رسائل التقييم (Feedback - /letters/tha/feedback/)
+- correct.wav: "ممتاز! برافو عليك"
+- try-again.wav: "حاول مرة كمان"
+- lesson-complete.wav: "برافو! خلصت درس حرف الثاء"
+
+# حرف الجيم (ج)
+----------------
+
+## الملفات الأساسية (Basic Files - /letters/jeem/)
+- letter-name.wav: "هذا حرف الجيم"
+- letter-sound.wav: "صوت الحرف جَ"
+- letter-full-intro.wav: "هذا حرف الجيم. اسمه جيم، وصوته جَ"
+
+## أشكال الحرف (Forms - /letters/jeem/forms/)
+- initial.wav: "في أول الكلمة جـ"
+- middle.wav: "في النص ـجـ"
+- final.wav: "في الآخر ـج"
+- all-forms.wav: "حرف الجيم ليه أشكال مختلفة. في أول الكلمة جـ، وفي النص ـجـ، وفي الآخر ـج"
+
+## التشكيل (Diacritics - /letters/jeem/diacritics/)
+- fatha.wav: "جَ"
+- damma.wav: "جُ"
+- kasra.wav: "جِ"
+- sukoon.wav: "جْ"
+- all-sounds.wav: "اسمع الأصوات المختلفة لحرف الجيم: جَ، جُ، جِ، جْ"
+
+## الكلمات (Words - /letters/jeem/words/)
+- word1.wav: "جمل"
+- word2.wav: "جبل"
+
+## تعليمات التمارين (Exercises - /letters/jeem/exercises/)
+- find-letter.wav: "دور على حرف الجيم ودوس عليه"
+- pronounce.wav: "قول معايا: جَ"
+- write-letter.wav: "اكتب حرف الجيم"
+
+## رسائل التقييم (Feedback - /letters/jeem/feedback/)
+- correct.wav: "ممتاز! برافو عليك"
+- try-again.wav: "حاول مرة كمان"
+- lesson-complete.wav: "برافو! خلصت درس حرف الجيم"
+
+# ملاحظات عامة للتسجيل
+----------------------
+1. استخدم لهجة مصرية بسيطة وواضحة
+2. تحدث ببطء وبصوت واضح
+3. حافظ على نفس مستوى الصوت في كل التسجيلات
+4. تأكد من عدم وجود ضوضاء في الخلفية
+5. احفظ الملفات بصيغة WAV
+6. اتبع نظام التسمية بدقة كما هو موضح في المسارات 

@@ -7,7 +7,7 @@ from google.cloud import texttospeech
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = ".config.json"
 
 def text_to_speech(text, filename):
-    """Convert text to Egyptian Arabic speech and save as MP3"""
+    """Convert text to Egyptian Arabic speech and save as WAV"""
     try:
         client = texttospeech.TextToSpeechClient()
 
