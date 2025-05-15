@@ -49,13 +49,22 @@ export function AudioButton({
   }, [selfTimeoutId]);
 
   const handleClick = () => {
+    // If single click mode is enabled (twoClickEnabled is false) or immediateAction is true,
+    // execute the action immediately without playing audio
+    if (!twoClickEnabled || immediateAction) {
+      onAction();
+      return;
+    }
+
+    // Two-click mode behavior
     if (!hasPlayed) {
-      playSound(audioSrc, () => {
-        setHasPlayed(true);
-        if (immediateAction && onAction) {
-          onAction();
-        }
-      });
+      playSound(
+        audioSrc,
+        () => {
+          setHasPlayed(true);
+        },
+        uniqueButtonId
+      );
     } else if (onAction) {
       onAction();
       setHasPlayed(false);
@@ -68,7 +77,9 @@ export function AudioButton({
   return (
     <Button
       className={cn(
-        transparent ? "bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent outline-none" : "",
+        transparent
+          ? "bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent outline-none"
+          : "",
         className
       )}
       onClick={handleClick}
@@ -85,16 +96,6 @@ export function AudioButton({
         !isPlaying &&
         !immediateAction && (
           <Volume2Icon className="ml-2 h-5 w-5 animate-pulse text-secondary dark:text-blue-500" />
-        )}
-
-      {isReadyForAction &&
-        twoClickEnabled &&
-        !isPlaying &&
-        !immediateAction && (
-          <>
-            <span className="absolute inset-0 -z-10 rounded-md bg-primary/20 blur-md"></span>
-            <span className="absolute -inset-1 -z-20 rounded-lg bg-primary/10 blur-lg animate-pulse"></span>
-          </>
         )}
     </Button>
   );

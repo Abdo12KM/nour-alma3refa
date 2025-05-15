@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { PageWrapper } from "@/components/ui/page-wrapper";
 import { useAuthStore } from "@/lib/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LetterLesson } from "@/components/letters/LetterLesson";
 import { notFound } from "next/navigation";
 import { use } from "react";
@@ -13,9 +13,9 @@ const LETTERS_DATA = {
     letter: "أ",
     name: "الألف",
     audioFiles: {
-      letterName: "/audio/letters/alef/letter-name.wav",
-      letterSound: "/audio/letters/alef/letter-sound.wav",
-      letterFullIntro: "/audio/letters/alef/letter-full-intro.wav",
+      letterName: "/audio/letters/alef/basic/letter-name.wav",
+      letterSound: "/audio/letters/alef/basic/letter-sound.wav",
+      letterFullIntro: "/audio/letters/alef/basic/letter-full-intro.wav",
       forms: {
         initial: "/audio/letters/alef/forms/initial.wav",
         middle: "/audio/letters/alef/forms/middle.wav",
@@ -49,9 +49,9 @@ const LETTERS_DATA = {
     letter: "ب",
     name: "الباء",
     audioFiles: {
-      letterName: "/audio/letters/ba/letter-name.wav",
-      letterSound: "/audio/letters/ba/letter-sound.wav",
-      letterFullIntro: "/audio/letters/ba/letter-full-intro.wav",
+      letterName: "/audio/letters/ba/basic/letter-name.wav",
+      letterSound: "/audio/letters/ba/basic/letter-sound.wav",
+      letterFullIntro: "/audio/letters/ba/basic/letter-full-intro.wav",
       forms: {
         initial: "/audio/letters/ba/forms/initial.wav",
         middle: "/audio/letters/ba/forms/middle.wav",
@@ -85,9 +85,9 @@ const LETTERS_DATA = {
     letter: "ت",
     name: "التاء",
     audioFiles: {
-      letterName: "/audio/letters/ta/letter-name.wav",
-      letterSound: "/audio/letters/ta/letter-sound.wav",
-      letterFullIntro: "/audio/letters/ta/letter-full-intro.wav",
+      letterName: "/audio/letters/ta/basic/letter-name.wav",
+      letterSound: "/audio/letters/ta/basic/letter-sound.wav",
+      letterFullIntro: "/audio/letters/ta/basic/letter-full-intro.wav",
       forms: {
         initial: "/audio/letters/ta/forms/initial.wav",
         middle: "/audio/letters/ta/forms/middle.wav",
@@ -121,9 +121,9 @@ const LETTERS_DATA = {
     letter: "ث",
     name: "الثاء",
     audioFiles: {
-      letterName: "/audio/letters/tha/letter-name.wav",
-      letterSound: "/audio/letters/tha/letter-sound.wav",
-      letterFullIntro: "/audio/letters/tha/letter-full-intro.wav",
+      letterName: "/audio/letters/tha/basic/letter-name.wav",
+      letterSound: "/audio/letters/tha/basic/letter-sound.wav",
+      letterFullIntro: "/audio/letters/tha/basic/letter-full-intro.wav",
       forms: {
         initial: "/audio/letters/tha/forms/initial.wav",
         middle: "/audio/letters/tha/forms/middle.wav",
@@ -157,9 +157,9 @@ const LETTERS_DATA = {
     letter: "ج",
     name: "الجيم",
     audioFiles: {
-      letterName: "/audio/letters/jeem/letter-name.wav",
-      letterSound: "/audio/letters/jeem/letter-sound.wav",
-      letterFullIntro: "/audio/letters/jeem/letter-full-intro.wav",
+      letterName: "/audio/letters/jeem/basic/letter-name.wav",
+      letterSound: "/audio/letters/jeem/basic/letter-sound.wav",
+      letterFullIntro: "/audio/letters/jeem/basic/letter-full-intro.wav",
       forms: {
         initial: "/audio/letters/jeem/forms/initial.wav",
         middle: "/audio/letters/jeem/forms/middle.wav",
@@ -206,13 +206,19 @@ function LetterPageClient({
   letter: keyof typeof LETTERS_DATA;
 }) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login");
-      return;
-    }
+    const timer = setTimeout(() => {
+      if (!isAuthenticated) {
+        router.push("/login");
+      } else {
+        setIsLoading(false);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [isAuthenticated, router]);
 
   if (!isAuthenticated) {
@@ -240,6 +246,18 @@ function LetterPageClient({
       router.push(`/lessons/letters/${letters[letterIndex - 1]}`);
     }
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-lg">جاري التحميل...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <PageWrapper>
@@ -271,5 +289,10 @@ export default function LetterPage({ params }: LetterPageProps) {
   }
 
   const letterData = LETTERS_DATA[decodedLetter as keyof typeof LETTERS_DATA];
-  return <LetterPageClient letterData={letterData} letter={decodedLetter as keyof typeof LETTERS_DATA} />;
+  return (
+    <LetterPageClient
+      letterData={letterData}
+      letter={decodedLetter as keyof typeof LETTERS_DATA}
+    />
+  );
 }

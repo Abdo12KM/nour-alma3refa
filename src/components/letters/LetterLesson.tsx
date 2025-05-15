@@ -6,7 +6,14 @@ import { Button } from "@/components/ui/button";
 import { AudioButton } from "@/components/ui/audio-button";
 import { Progress } from "@/components/ui/progress";
 import { useAudioStore } from "@/lib/audio";
-import { ArrowRight, ArrowLeft, Volume2, Mic, CheckCircle2, XCircle } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowLeft,
+  Volume2,
+  Mic,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 import { MicrophoneButton } from "./MicrophoneButton";
 import { LetterSearchExercise } from "./LetterSearchExercise";
 import { WritingExercise } from "./WritingExercise";
@@ -64,13 +71,23 @@ const LESSON_SECTIONS = [
 
 type LessonSection = (typeof LESSON_SECTIONS)[number];
 
-export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNext, onPrevious }: LetterLessonProps) {
-  const [currentSection, setCurrentSection] = useState<LessonSection>("introduction");
+export function LetterLesson({
+  letter,
+  letterName,
+  audioFiles,
+  onComplete,
+  onNext,
+  onPrevious,
+}: LetterLessonProps) {
+  const [currentSection, setCurrentSection] =
+    useState<LessonSection>("introduction");
   const [progress, setProgress] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [attempts, setAttempts] = useState(0);
-  const [lastResult, setLastResult] = useState<"success" | "error" | null>(null);
+  const [lastResult, setLastResult] = useState<"success" | "error" | null>(
+    null
+  );
   const { playSound } = useAudioStore();
 
   useEffect(() => {
@@ -155,7 +172,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
       // 2. The transcribed text contains the letter (in case they said "حرف الباء" for example)
       // 3. The transcribed text contains the letter name
       const isCorrect =
-        transcribedText === letter || transcribedText.includes(letter) || transcribedText.includes(letterName);
+        transcribedText === letter ||
+        transcribedText.includes(letter) ||
+        transcribedText.includes(letterName);
 
       setAttempts((prev) => prev + 1);
 
@@ -170,7 +189,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
       } else {
         setLastResult("error");
         playSound(audioFiles.feedback.tryAgain, () => {
-          setError(attempts >= 2 ? "حاول مرة أخرى. انطق الحرف بوضوح" : "حاول مرة أخرى");
+          setError(
+            attempts >= 2 ? "حاول مرة أخرى. انطق الحرف بوضوح" : "حاول مرة أخرى"
+          );
         });
       }
     } catch (error) {
@@ -187,7 +208,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
       case "introduction":
         return (
           <div className="space-y-12 text-center w-full">
-            <div className="text-[12rem] font-bold text-primary animate-bounce-slow">{letter}</div>
+            <div className="text-[12rem] font-bold text-primary animate-bounce-slow">
+              {letter}
+            </div>
             <div className="w-full max-w-3xl mx-auto">
               <h2 className="text-4xl font-bold mb-6">{letterName}</h2>
               <p className="text-2xl">جاري تشغيل الصوت...</p>
@@ -202,14 +225,24 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
 
             <Card className="p-6 bg-background/50 border-primary/20">
               <div className="space-y-6">
-                <AudioButton audioSrc={audioFiles.letterSound} onAction={() => {}} className="w-full" variant="ghost">
+                <AudioButton
+                  showSoundIcon={false}
+                  audioSrc={audioFiles.letterSound}
+                  onAction={() => {}}
+                  className="w-full"
+                  variant="outline"
+                >
                   <div className="flex items-center justify-center gap-2">
-                    <Volume2 className="h-6 w-6" />
                     <p className="text-xl">اسمع نطق الحرف أولاً</p>
+                    <Volume2 className="h-6 w-6" />
                   </div>
                 </AudioButton>
 
-                {error && <div className="bg-destructive/15 text-destructive p-3 rounded-md text-center">{error}</div>}
+                {error && (
+                  <div className="bg-destructive/15 text-destructive p-3 rounded-md text-center">
+                    {error}
+                  </div>
+                )}
 
                 <div className="relative">
                   {isProcessing ? (
@@ -218,9 +251,11 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <MicrophoneButton onRecordingComplete={verifyPronunciation} className="w-full">
+                      <MicrophoneButton
+                        onRecordingComplete={verifyPronunciation}
+                        className="w-full"
+                      >
                         <div className="flex items-center justify-center gap-2">
-                          <Mic className="h-6 w-6" />
                           انطق الحرف
                         </div>
                       </MicrophoneButton>
@@ -228,7 +263,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
                       {lastResult && (
                         <div
                           className={`flex items-center justify-center gap-2 text-lg ${
-                            lastResult === "success" ? "text-green-500" : "text-red-500"
+                            lastResult === "success"
+                              ? "text-green-500"
+                              : "text-red-500"
                           }`}
                         >
                           {lastResult === "success" ? (
@@ -264,7 +301,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
       case "letterForms":
         return (
           <div className="w-full h-full">
-            <h2 className="text-3xl font-bold text-center mb-12">أشكال الحرف</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">
+              أشكال الحرف
+            </h2>
             <div className="grid grid-cols-3 gap-16 w-full h-[calc(100vh-16rem)]">
               <AudioButton
                 audioSrc={audioFiles.forms.initial}
@@ -273,10 +312,13 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
                 }}
                 className="w-full h-full"
                 transparent
+                showSoundIcon={false}
               >
                 <Card className="p-16 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center">
                   <div className="text-5xl mb-8">في البداية</div>
-                  <div className="text-9xl font-bold text-primary">{letter}ـ</div>
+                  <div className="text-9xl font-bold text-primary">
+                    {letter}ـ
+                  </div>
                 </Card>
               </AudioButton>
               <AudioButton
@@ -286,10 +328,13 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
                 }}
                 className="w-full h-full"
                 transparent
+                showSoundIcon={false}
               >
                 <Card className="p-16 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center">
                   <div className="text-5xl mb-8">في الوسط</div>
-                  <div className="text-9xl font-bold text-primary">ـ{letter}ـ</div>
+                  <div className="text-9xl font-bold text-primary">
+                    ـ{letter}ـ
+                  </div>
                 </Card>
               </AudioButton>
               <AudioButton
@@ -299,10 +344,13 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
                 }}
                 className="w-full h-full"
                 transparent
+                showSoundIcon={false}
               >
                 <Card className="p-16 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center">
                   <div className="text-5xl mb-8">في النهاية</div>
-                  <div className="text-9xl font-bold text-primary">ـ{letter}</div>
+                  <div className="text-9xl font-bold text-primary">
+                    ـ{letter}
+                  </div>
                 </Card>
               </AudioButton>
             </div>
@@ -352,7 +400,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
               >
                 <Card className="p-16 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center">
                   <div className="text-5xl mb-8">فتحة</div>
-                  <div className="text-9xl font-bold text-primary">{letter}َ</div>
+                  <div className="text-9xl font-bold text-primary">
+                    {letter}َ
+                  </div>
                 </Card>
               </AudioButton>
               <AudioButton
@@ -365,7 +415,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
               >
                 <Card className="p-16 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center">
                   <div className="text-5xl mb-8">ضمة</div>
-                  <div className="text-9xl font-bold text-primary">{letter}ُ</div>
+                  <div className="text-9xl font-bold text-primary">
+                    {letter}ُ
+                  </div>
                 </Card>
               </AudioButton>
               <AudioButton
@@ -378,7 +430,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
               >
                 <Card className="p-16 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center">
                   <div className="text-5xl mb-8">كسرة</div>
-                  <div className="text-9xl font-bold text-primary">{letter}ِ</div>
+                  <div className="text-9xl font-bold text-primary">
+                    {letter}ِ
+                  </div>
                 </Card>
               </AudioButton>
               <AudioButton
@@ -391,7 +445,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
               >
                 <Card className="p-16 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center">
                   <div className="text-5xl mb-8">سكون</div>
-                  <div className="text-9xl font-bold text-primary">{letter}ْ</div>
+                  <div className="text-9xl font-bold text-primary">
+                    {letter}ْ
+                  </div>
                 </Card>
               </AudioButton>
             </div>
@@ -427,7 +483,9 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
 
         return (
           <div className="space-y-8 w-full">
-            <h2 className="text-3xl font-bold text-center mb-8">كلمات تبدأ بحرف {letter}</h2>
+            <h2 className="text-3xl font-bold text-center mb-8">
+              كلمات تبدأ بحرف {letter}
+            </h2>
             <div className="grid grid-cols-2 gap-12 w-full">
               <Card
                 className="p-12 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center cursor-pointer"
@@ -450,7 +508,11 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
           <div className="space-y-8 text-center">
             <h2 className="text-4xl font-bold mb-4">أحسنت!</h2>
             <p className="text-xl">لقد أتممت درس حرف {letterName}</p>
-            <Button onClick={onComplete} size="lg" className="w-full max-w-md mx-auto p-8">
+            <Button
+              onClick={onComplete}
+              size="lg"
+              className="w-full max-w-md mx-auto p-8"
+            >
               أنهي الدرس
             </Button>
           </div>
@@ -469,7 +531,7 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
         {renderSection()}
       </div>
 
-      <div className="fixed bottom-8 left-0 right-0 flex justify-between items-center w-full px-8 bg-background/80 backdrop-blur">
+      <div className="fixed bottom-8 left-0 right-0 flex justify-between items-center w-full px-8 bg-transparent">
         <Button
           variant="outline"
           onClick={goToPreviousSection}
@@ -482,7 +544,11 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
         </Button>
 
         {currentSection !== "completion" && (
-          <Button onClick={goToNextSection} className="min-w-[160px] text-xl py-6" size="lg">
+          <Button
+            onClick={goToNextSection}
+            className="min-w-[160px] text-xl py-6"
+            size="lg"
+          >
             التالي
             <ArrowLeft className="mr-2 h-6 w-6" />
           </Button>
@@ -491,11 +557,21 @@ export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNex
 
       {onPrevious && onNext && (
         <div className="fixed bottom-28 left-0 right-0 flex justify-between px-8 bg-background/80 backdrop-blur">
-          <Button variant="ghost" onClick={onPrevious} className="min-w-[160px] text-xl py-6" size="lg">
+          <Button
+            variant="ghost"
+            onClick={onPrevious}
+            className="min-w-[160px] text-xl py-6"
+            size="lg"
+          >
             <ArrowRight className="ml-2 h-6 w-6" />
             الحرف السابق
           </Button>
-          <Button variant="ghost" onClick={onNext} className="min-w-[160px] text-xl py-6" size="lg">
+          <Button
+            variant="ghost"
+            onClick={onNext}
+            className="min-w-[160px] text-xl py-6"
+            size="lg"
+          >
             الحرف التالي
             <ArrowLeft className="mr-2 h-6 w-6" />
           </Button>

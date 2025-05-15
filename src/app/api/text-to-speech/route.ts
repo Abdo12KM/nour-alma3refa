@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as textToSpeech from "@google-cloud/text-to-speech";
 import { z } from "zod";
+import { rateLimiter } from "@/lib/rate-limit";
 
 // Schema to validate the request body
 const ttsSchema = z.object({
@@ -8,8 +9,20 @@ const ttsSchema = z.object({
   type: z.enum(["name", "pin", "general"]).default("general"),
 });
 
+// Set up rate limiter for this API: 20 requests per minute
+const textToSpeechRateLimiter = rateLimiter({
+  limit: 20,
+  windowInSeconds: 60,
+});
+
 export async function POST(req: NextRequest) {
   try {
+    // Check rate limit first
+    const rateLimitResult = await textToSpeechRateLimiter(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
     // Parse and validate the request body
     const body = await req.json();
     const validatedData = ttsSchema.safeParse(body);

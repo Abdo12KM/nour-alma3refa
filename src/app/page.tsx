@@ -14,7 +14,6 @@ import {
   AwardIcon,
   Lightbulb,
 } from "lucide-react";
-import { MainLayout } from "@/components/layout/MainLayout";
 import {
   motion,
   useScroll,
@@ -24,6 +23,7 @@ import {
 import { AudioButton } from "@/components/ui/audio-button";
 import { Marquee } from "@/components/magicui/marquee";
 import { VideoButton } from "@/components/ui/video-button";
+import { SectionAudioButton } from "@/components/ui/section-audio-button";
 
 // Animation variants
 const fadeIn = {
@@ -115,7 +115,6 @@ export default function Home() {
 
   // Add scroll-based animations
   const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 300], [0, 100]);
   const heroOpacity = useTransform(scrollY, [0, 300], [1, 0.5]);
 
   // Create multiple parallax layers with different strengths
@@ -169,24 +168,12 @@ export default function Home() {
     [0, shouldReduceMotion ? 0 : -30]
   );
 
-  // Add more parallax layers for the CTA section
-  const ctaBgLayer = useTransform(
-    scrollY,
-    [2000, 2600],
-    [0, shouldReduceMotion ? 0 : -120]
-  );
-  const ctaContentLayer = useTransform(
-    scrollY,
-    [2100, 2500],
-    [0, shouldReduceMotion ? 0 : -60]
-  );
-
   // Testimonial data for the marquee
   const testimonials = [
-    { icon: StarIcon, text: "تعلمت القراءة في أسبوعين فقط" },
-    { icon: HeartIcon, text: "طريقة ممتازة للتعلم بسهولة وسرعة" },
-    { icon: AwardIcon, text: "الصوت يساعدني كثيرًا في فهم الحروف" },
-    { icon: StarIcon, text: "التطبيق سهل الاستخدام ومناسب لجميع الأعمار" },
+    { icon: StarIcon, text: "اتعلمت القراءة في أسبوعين بس!" },
+    { icon: HeartIcon, text: "طريقة ممتازة عشان تتعلم بسهولة وبسرعة" },
+    { icon: AwardIcon, text: "الصوت بيساعدني جدًا أفهم الحروف" },
+    { icon: StarIcon, text: "البرنامج سهل أوي ومناسب لكل الأعمار" },
   ];
 
   const handleGetStarted = () => {
@@ -198,7 +185,7 @@ export default function Home() {
   };
 
   return (
-    <MainLayout>
+    <div className="min-h-screen flex flex-col bg-background">
       {/* Auth Debug - only in development */}
       {/* {process.env.NODE_ENV === "development" && (
         <div className="fixed bottom-4 left-4 p-2 bg-gray-800 text-white text-xs rounded z-50 opacity-60 hover:opacity-100">
@@ -286,10 +273,6 @@ export default function Home() {
                 />
                 <Lightbulb className="w-14 h-14 text-blue-500" />
               </motion.div>
-              <VideoButton 
-              className="relative text-base" 
-              audioSrc="/audio/how-to-learn-intro.wav"
-            />
             </motion.h1>
 
             <motion.p
@@ -298,7 +281,11 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              رحلتك نحو القراءة والكتابة تبدأ هنا
+              رحلتك للقراءة والكتابة بتبدأ من هنا
+              <SectionAudioButton
+                audioSrc="/audio/sections/hero-section.wav"
+                className="ms-2 -translate-y-1"
+              />
             </motion.p>
           </motion.div>
 
@@ -306,7 +293,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="relative max-w-md mx-auto"
+            className="relative max-w-xl mx-auto" // Widened to accommodate both buttons
           >
             <motion.div
               className="absolute -inset-1.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-xl blur-xl"
@@ -316,7 +303,10 @@ export default function Home() {
               }}
               transition={{ duration: 3, repeat: Infinity }}
             />
-            <motion.div whileHover={{ scale: 1.05 }} className="relative">
+            <motion.div
+              className="relative flex flex-col md:flex-row items-center justify-center gap-4"
+              whileHover={{ scale: 1.02 }}
+            >
               <AudioButton
                 size="lg"
                 className="relative text-lg px-10 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all w-full md:w-auto"
@@ -324,9 +314,15 @@ export default function Home() {
                 audioSrc="/audio/start-learning.wav"
                 immediateAction={true}
               >
-                ابدأ التعلم
+                ابدأ اتعلم
                 <ArrowRightIcon className="mr-2 h-5 w-5" />
               </AudioButton>
+
+              <VideoButton
+                size="lg"
+                className="relative text-lg px-10 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all w-full md:w-auto"
+                audioSrc="/audio/how-to-learn-intro.wav"
+              />
             </motion.div>
           </motion.div>
         </div>
@@ -340,17 +336,6 @@ export default function Home() {
         transition={{ duration: 0.8, delay: 0.4 }}
       >
         <div className="relative">
-          <motion.div
-            className="absolute inset-0 bg-[url('/noise.png')] opacity-10 z-0 pointer-events-none"
-            animate={{
-              backgroundPosition: ["0% 0%", "100% 100%"],
-            }}
-            transition={{
-              duration: 60,
-              repeat: Infinity,
-              repeatType: "mirror" as const,
-            }}
-          />
           <Marquee className="py-3" pauseOnHover={true}>
             {testimonials.map((item, index) => (
               <motion.div
@@ -429,15 +414,21 @@ export default function Home() {
             </motion.div>
 
             {/* Replace character-by-character animation with simple h2 */}
-            <motion.h2
-              className="text-4xl font-bold mb-4"
-              variants={textAnimateUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              مميزات التطبيق
-            </motion.h2>
+            <div className="flex justify-center items-center">
+              <motion.h2
+                className="text-4xl font-bold mb-4"
+                variants={textAnimateUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+              >
+                مميزات البرنامج
+                <SectionAudioButton
+                  audioSrc="/audio/sections/features-section.wav"
+                  className="mr-3"
+                />
+              </motion.h2>
+            </div>
 
             <motion.p
               className="text-xl text-muted-foreground max-w-2xl mx-auto"
@@ -447,7 +438,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              تطبيق يجمع بين التكنولوجيا المتطورة وسهولة الاستخدام لتعليم
+              برنامج بيجمع بين التكنولوجيا المتطورة وسهولة الاستخدام عشان يعلمك
               القراءة والكتابة
             </motion.p>
           </motion.div>
@@ -488,7 +479,7 @@ export default function Home() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                تعلم الأبجدية العربية
+                اتعلم الحروف العربية
               </motion.h3>
 
               <motion.p
@@ -499,8 +490,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                تعلم الحروف العربية من الألف إلى الياء بطريقة تفاعلية ومبسطة
-                تناسب جميع المستويات
+                اتعلم الحروف العربية من الألف للياء بطريقة تفاعلية وسهلة تناسب
+                كل المستويات
               </motion.p>
             </motion.div>
 
@@ -532,7 +523,7 @@ export default function Home() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                تعلم الأرقام
+                اتعلم الأرقام
               </motion.h3>
 
               <motion.p
@@ -543,8 +534,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                تعلم الأرقام والعد بطريقة سهلة ومدعومة بالصوت والصور تجعل التعلم
-                ممتعاً وفعالاً
+                اتعلم الأرقام والعد بطريقة سهلة، ومعاها صوت وصور تخلي التعليم
+                ممتع ويفيدك
               </motion.p>
             </motion.div>
 
@@ -587,8 +578,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                تقنيات الذكاء الاصطناعي لتحسين التعلم وتخصيص التجربة حسب
-                احتياجات كل متعلم
+                تقنيات ذكاء اصطناعي عشان تخلي تعليمك أحسن وتجربتك متفصلة على قد
+                احتياجاتك
               </motion.p>
             </motion.div>
           </motion.div>
@@ -656,15 +647,21 @@ export default function Home() {
             </motion.div>
 
             {/* Replace character-by-character animation with simple h2 */}
-            <motion.h2
-              className="text-4xl font-bold mb-4"
-              variants={textAnimateUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              كيف يعمل التطبيق؟
-            </motion.h2>
+            <div className="flex justify-center items-center">
+              <motion.h2
+                className="text-4xl font-bold mb-4"
+                variants={textAnimateUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+              >
+                البرنامج بيشتغل إزاي؟
+                <SectionAudioButton
+                  audioSrc="/audio/sections/how-it-works-section.wav"
+                  className="mr-3"
+                />
+              </motion.h2>
+            </div>
 
             <motion.p
               className="text-xl text-muted-foreground max-w-2xl mx-auto"
@@ -673,7 +670,7 @@ export default function Home() {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              ثلاث خطوات سهلة تبدأ بها رحلتك نحو تعلم القراءة والكتابة
+              3 خطوات سهلة تبدأ بيهم رحلتك عشان تتعلم القراءة والكتابة
             </motion.p>
           </motion.div>
 
@@ -735,7 +732,7 @@ export default function Home() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                سجل حساب
+                اعمل حساب
               </motion.h3>
 
               <motion.p
@@ -746,9 +743,9 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                أنشئ حساب بالصوت أو الكتابة بكل سهولة
+                اعمل حساب بصوتك أو بالكتابة بسهولة خالص
                 <br />
-                وابدأ رحلتك التعليمية
+                وابدأ رحلة تعليمك
               </motion.p>
             </motion.div>
 
@@ -786,7 +783,7 @@ export default function Home() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                اختر الدروس
+                اختار الدروس
               </motion.h3>
 
               <motion.p
@@ -797,9 +794,9 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                حدد ما تريد تعلمه من حروف وأرقام وكلمات
+                اختار اللي عايز تتعلمه، حروف، أرقام، كلمات،
                 <br />
-                بما يناسب احتياجاتك
+                على حسب اللي محتاجه
               </motion.p>
             </motion.div>
 
@@ -837,7 +834,7 @@ export default function Home() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                ابدأ التعلم
+                ابدأ اتعلم
               </motion.h3>
 
               <motion.p
@@ -848,9 +845,9 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                تمتع بتجربة تعليمية تفاعلية مدعومة بالصوت
+                استمتع بتجربة تعليم تفاعلية فيها صوت،
                 <br />
-                وتعلم بسرعة وسهولة
+                واتعلم بسرعة وسهولة
               </motion.p>
             </motion.div>
           </motion.div>
@@ -909,17 +906,23 @@ export default function Home() {
               transition={{ duration: 0.4 }}
               viewport={{ once: true }}
             >
-              الفئات المستهدفة
+              البرنامج ده لمين؟
             </motion.div>
-            <motion.h2
-              className="text-4xl font-bold mb-4"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              لمن هذا التطبيق؟
-            </motion.h2>
+            <div className="flex justify-center items-center">
+              <motion.h2
+                className="text-4xl font-bold mb-4"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                مين ممكن يستفيد من البرنامج؟
+                <SectionAudioButton
+                  audioSrc="/audio/sections/target-audience-section.wav"
+                  className="mr-3"
+                />
+              </motion.h2>
+            </div>
             <motion.p
               className="text-xl text-muted-foreground max-w-2xl mx-auto"
               initial={{ opacity: 0 }}
@@ -927,8 +930,8 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              تطبيق نور المعرفة مصمم للأشخاص الذين يرغبون في تعلم القراءة
-              والكتابة باللغة العربية
+              برنامج نور المعرفة معمول للناس اللي عاوزة تتعلم القراءة والكتابة
+              بالعربي
             </motion.p>
           </motion.div>
 
@@ -952,11 +955,11 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-2">
-                    البالغين الأميين
+                    الكبار اللي مبيعرفوش يقروا ويكتبوا
                   </h3>
                   <p className="text-muted-foreground">
-                    الذين يرغبون في اكتساب مهارات القراءة والكتابة لتحسين فرصهم
-                    في العمل والحياة اليومية
+                    اللي عاوزين يكتسبوا مهارات القراءة والكتابة عشان يحسنوا
+                    فرصهم في الشغل وفي حياتهم اليومية
                   </p>
                 </div>
               </motion.div>
@@ -973,11 +976,11 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-2">
-                    المتعلمين المبتدئين
+                    اللي لسه بيبدأوا يتعلموا
                   </h3>
                   <p className="text-muted-foreground">
-                    الذين يحتاجون إلى تعلم أساسيات اللغة العربية بطريقة مبسطة
-                    وتفاعلية تناسب قدراتهم
+                    اللي محتاجين يتعلموا أساسيات العربي بطريقة سهلة وتفاعلية
+                    تناسب قدراتهم
                   </p>
                 </div>
               </motion.div>
@@ -1015,13 +1018,13 @@ export default function Home() {
                   "
                 </motion.div>
                 <p className="mb-6 relative z-10">
-                  يهدف تطبيق نور المعرفة إلى معالجة تحدي الأمية في مصر من خلال
-                  تقديم تجربة تعليمية مبتكرة تعتمد على الصوت واللعب للبالغين
-                  الأميين وشبه الأميين.
+                  برنامج نور المعرفة هدفه يساعد في حل مشكلة الأمية في مصر، عن
+                  طريق تجربة تعليم جديدة بتعتمد على الصوت واللعب للكبار اللي
+                  مبيعرفوش يقروا ويكتبوا أو اللي معلوماتهم بسيطة.
                 </p>
                 <p className="font-semibold text-primary/90">
-                  باستخدام تقنيات الذكاء الاصطناعي والتفاعل الصوتي، نجعل الخطوات
-                  الأولى نحو محو الأمية سهلة ومشجعة قدر الإمكان.
+                  بتقنيات الذكاء الاصطناعي والتفاعل بالصوت، بنخلي أول خطوات عشان
+                  تمحي الأمية سهلة وتشجعك على قد ما نقدر.
                 </p>
               </blockquote>
             </motion.div>
@@ -1037,11 +1040,7 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
-        {/* Enhanced parallax background */}
-        <motion.div
-          className="absolute inset-0 -z-10"
-          style={{ y: ctaBgLayer }}
-        >
+        <motion.div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-gradient-to-t from-primary/5 via-transparent to-primary/5"></div>
           <motion.div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl"
@@ -1093,20 +1092,26 @@ export default function Home() {
               y: -5,
               transition: { duration: 0.3 },
             }}
-            style={{ y: ctaContentLayer }}
           >
             {/* Add decorative elements */}
             <div className="absolute -z-10 -inset-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent"></div>
 
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80"
-              initial={{ opacity: 0, y: -20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              ابدأ رحلتك التعليمية الآن
-            </motion.h2>
+            <div className="flex justify-center items-center">
+              <motion.h2
+                className="text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80"
+                initial={{ opacity: 0, y: -20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                ابدأ رحلة تعليمك دلوقتي!
+                <SectionAudioButton
+                  audioSrc="/audio/sections/cta-section.wav"
+                  className="mr-3"
+                  size="sm"
+                />
+              </motion.h2>
+            </div>
 
             <motion.p
               className="text-xl text-muted-foreground mb-10"
@@ -1116,8 +1121,8 @@ export default function Home() {
               transition={{ delay: 0.3, duration: 0.5 }}
               variants={textAnimateUp}
             >
-              انضم إلى الآلاف من المتعلمين وابدأ رحلتك نحو القراءة والكتابة
-              بأساليب حديثة ومبتكرة
+              انضم لآلاف الناس اللي بتتعلم وابدأ رحلتك للقراءة والكتابة بطرق
+              جديدة ومبتكرة
             </motion.p>
 
             <motion.div
@@ -1146,7 +1151,7 @@ export default function Home() {
                   onAction={() => router.push("/register")}
                   audioSrc="/audio/go-to-register.wav"
                 >
-                  تسجيل حساب جديد
+                  اعمل حساب جديد
                 </AudioButton>
               </motion.div>
 
@@ -1157,7 +1162,7 @@ export default function Home() {
                 onAction={() => router.push("/login")}
                 audioSrc="/audio/go-to-login.wav"
               >
-                تسجيل الدخول
+                سجل دخول
               </AudioButton>
             </motion.div>
           </motion.div>
@@ -1185,13 +1190,13 @@ export default function Home() {
               <span className="font-medium text-primary/80">نور المعرفة</span>
             </div>
             <span className="hidden md:block text-muted-foreground/50">•</span>
-            <span>معاً نحو مستقبل خالٍ من الأمية</span>
+            <span>مع بعض لمستقبل مفيهوش أمية</span>
           </motion.div>
           <p className="text-sm text-muted-foreground/80">
-            © {new Date().getFullYear()} نور المعرفة - جميع الحقوق محفوظة
+            © {new Date().getFullYear()} نور المعرفة - كل الحقوق محفوظة
           </p>
         </div>
       </motion.footer>
-    </MainLayout>
+    </div>
   );
 }

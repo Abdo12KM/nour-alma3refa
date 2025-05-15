@@ -1,9 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
+import { rateLimiter } from "@/lib/rate-limit";
+
+// Set up rate limiter for this API: 10 requests per minute
+const speechToTextRateLimiter = rateLimiter({
+  limit: 10,
+  windowInSeconds: 60,
+});
 
 export async function POST(request: NextRequest) {
   try {
+    // Check rate limit first
+    const rateLimitResult = await speechToTextRateLimiter(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+    
     // Check if Google API key is configured
     if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
       console.error(

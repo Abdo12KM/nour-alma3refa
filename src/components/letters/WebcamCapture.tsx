@@ -11,24 +11,30 @@ interface WebcamCaptureProps {
   isProcessing?: boolean;
 }
 
-export function WebcamCapture({ onCapture, className, isProcessing = false }: WebcamCaptureProps) {
+export function WebcamCapture({
+  onCapture,
+  className,
+  isProcessing = false,
+}: WebcamCaptureProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
-  const [facingMode, setFacingMode] = useState<"user" | "environment">("environment");
+  const [facingMode, setFacingMode] = useState<"user" | "environment">(
+    "environment"
+  );
   const [isStarted, setIsStarted] = useState(false);
 
   const startCamera = useCallback(async () => {
     try {
       if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       }
 
       const newStream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode,
           width: { ideal: 1280 },
-          height: { ideal: 720 }
-        }
+          height: { ideal: 720 },
+        },
       });
 
       setStream(newStream);
@@ -43,14 +49,14 @@ export function WebcamCapture({ onCapture, className, isProcessing = false }: We
 
   const stopCamera = useCallback(() => {
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
       setStream(null);
     }
     setIsStarted(false);
   }, [stream]);
 
   const toggleCamera = useCallback(() => {
-    setFacingMode(prev => prev === "user" ? "environment" : "user");
+    setFacingMode((prev) => (prev === "user" ? "environment" : "user"));
     if (isStarted) {
       startCamera();
     }
@@ -62,7 +68,7 @@ export function WebcamCapture({ onCapture, className, isProcessing = false }: We
     const canvas = document.createElement("canvas");
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
-    
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -74,11 +80,15 @@ export function WebcamCapture({ onCapture, className, isProcessing = false }: We
 
     ctx.drawImage(videoRef.current, 0, 0);
 
-    canvas.toBlob((blob) => {
-      if (blob) {
-        onCapture(blob);
-      }
-    }, "image/jpeg", 0.8);
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          onCapture(blob);
+        }
+      },
+      "image/jpeg",
+      0.8
+    );
   }, [facingMode, onCapture, isProcessing]);
 
   return (
@@ -89,13 +99,17 @@ export function WebcamCapture({ onCapture, className, isProcessing = false }: We
           autoPlay
           playsInline
           muted
-          className={`w-full rounded-lg ${facingMode === "user" ? "scale-x-[-1]" : ""}`}
+          className={`w-8/12
+            justify-center items-center self-center
+            rounded-lg ${facingMode === "user" ? "scale-x-[-1]" : ""}`}
           style={{ display: isStarted ? "block" : "none" }}
         />
-        
+
         {!isStarted && (
           <div className="flex items-center justify-center min-h-[200px] bg-muted rounded-lg">
-            <p className="text-muted-foreground">اضغط على زر الكاميرا لبدء التصوير</p>
+            <p className="text-muted-foreground">
+              اضغط على زر الكاميرا لبدء التصوير
+            </p>
           </div>
         )}
 
@@ -143,4 +157,4 @@ export function WebcamCapture({ onCapture, className, isProcessing = false }: We
       </div>
     </Card>
   );
-} 
+}

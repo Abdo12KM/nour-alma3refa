@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 # Project: Nour al-Ma'rifa - Custom AI Instructions
 

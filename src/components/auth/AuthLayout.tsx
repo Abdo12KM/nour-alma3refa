@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAudioStore } from "@/lib/audio";
-import { MainLayout } from "@/components/layout/MainLayout";
 
 interface AuthLayoutProps {
   title: string;
@@ -39,16 +38,15 @@ export function AuthLayout({
       stopSound();
     };
   }, [welcomeAudioSrc, playSound, stopSound]);
+  
   return (
-    <MainLayout>
-      <div className="w-full max-w-lg mx-auto my-10 px-4">
-        <Card className="w-full">
-          <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-3xl font-bold">{title}</CardTitle>
-          </CardHeader>
-          <CardContent className="p-3 space-y-3">{children}</CardContent>
-        </Card>
-      </div>
-    </MainLayout>
+    <div className="w-full max-w-lg mx-auto my-10 px-4">
+      <Card className="w-full">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-3xl font-bold">{title}</CardTitle>
+        </CardHeader>
+        <CardContent className="p-3 space-y-3">{children}</CardContent>
+      </Card>
+    </div>
   );
 }
