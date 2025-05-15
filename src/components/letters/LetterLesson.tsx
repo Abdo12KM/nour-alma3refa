@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { AudioButton } from "@/components/ui/audio-button";
 import { Progress } from "@/components/ui/progress";
 import { useAudioStore } from "@/lib/audio";
-import { ArrowRight, ArrowLeft, Mic, PenTool, Image } from "lucide-react";
+import { ArrowRight, ArrowLeft, Volume2, Mic, CheckCircle2, XCircle } from "lucide-react";
 import { MicrophoneButton } from "./MicrophoneButton";
 import { LetterSearchExercise } from "./LetterSearchExercise";
 import { WritingExercise } from "./WritingExercise";
@@ -80,6 +80,10 @@ export function LetterLesson({
 }: LetterLessonProps) {
   const [currentSection, setCurrentSection] = useState<LessonSection>("introduction");
   const [progress, setProgress] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [attempts, setAttempts] = useState(0);
+  const [lastResult, setLastResult] = useState<"success" | "error" | null>(null);
   const { playSound } = useAudioStore();
 
   useEffect(() => {
@@ -114,6 +118,10 @@ export function LetterLesson({
     if (currentIndex < LESSON_SECTIONS.length - 1) {
       setCurrentSection(LESSON_SECTIONS[currentIndex + 1]);
       updateProgress();
+      // Reset states when moving to next section
+      setError(null);
+      setAttempts(0);
+      setLastResult(null);
     } else {
       onComplete();
     }
@@ -124,6 +132,67 @@ export function LetterLesson({
     if (currentIndex > 0) {
       setCurrentSection(LESSON_SECTIONS[currentIndex - 1]);
       updateProgress();
+      // Reset states when moving to previous section
+      setError(null);
+      setAttempts(0);
+      setLastResult(null);
+    }
+  };
+
+  const verifyPronunciation = async (audioBlob: Blob) => {
+    try {
+      setIsProcessing(true);
+      setError(null);
+      setLastResult(null);
+
+      const formData = new FormData();
+      formData.append("audio", audioBlob);
+
+      const response = await fetch("/api/speech-to-text", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "فشل التحقق من النطق");
+      }
+
+      // Get the transcribed text and compare with the letter
+      const transcribedText = data.text.trim();
+      
+      // Check if the transcribed text matches the letter
+      // We'll consider it correct if:
+      // 1. The transcribed text exactly matches the letter
+      // 2. The transcribed text contains the letter (in case they said "حرف الباء" for example)
+      // 3. The transcribed text contains the letter name
+      const isCorrect = transcribedText === letter || 
+                       transcribedText.includes(letter) ||
+                       transcribedText.includes(letterName);
+
+      setAttempts(prev => prev + 1);
+
+      if (isCorrect) {
+        setLastResult("success");
+        playSound(audioFiles.feedback.correct, () => {
+          // Only proceed automatically if they got it right within 3 attempts
+          if (attempts < 3) {
+            setTimeout(goToNextSection, 1500);
+          }
+        });
+      } else {
+        setLastResult("error");
+        playSound(audioFiles.feedback.tryAgain, () => {
+          setError(attempts >= 2 ? "حاول مرة أخرى. انطق الحرف بوضوح" : "حاول مرة أخرى");
+        });
+      }
+    } catch (error) {
+      console.error("Error verifying pronunciation:", error);
+      setError("حدث خطأ أثناء التحقق من النطق. حاول مرة أخرى.");
+      setLastResult("error");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -146,26 +215,75 @@ export function LetterLesson({
         return (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-center mb-8">تدريب النطق</h2>
-            <AudioButton
-              audioSrc={audioFiles.letterSound}
-              onAction={() => {}}
-              className="w-full mb-4"
-              transparent
-            >
-              <p className="text-xl">اسمع نطق الحرف أولاً</p>
-            </AudioButton>
-            <MicrophoneButton
-              onRecordingComplete={(blob) => {
-                // TODO: Implement speech recognition with Gemini API
-                // For now, just proceed after recording
-                playSound(audioFiles.feedback.correct, () => {
-                  setTimeout(goToNextSection, 1000);
-                });
-              }}
-              className="w-full"
-            >
-              انطق الحرف
-            </MicrophoneButton>
+            
+            <Card className="p-6 bg-background/50 border-primary/20">
+              <div className="space-y-6">
+                <AudioButton
+                  audioSrc={audioFiles.letterSound}
+                  onAction={() => {}}
+                  className="w-full"
+                  variant="ghost"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Volume2 className="h-6 w-6" />
+                    <p className="text-xl">اسمع نطق الحرف أولاً</p>
+                  </div>
+                </AudioButton>
+
+                {error && (
+                  <div className="bg-destructive/15 text-destructive p-3 rounded-md text-center">
+                    {error}
+                  </div>
+                )}
+
+                <div className="relative">
+                  {isProcessing ? (
+                    <div className="flex items-center justify-center p-4">
+                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <MicrophoneButton
+                        onRecordingComplete={verifyPronunciation}
+                        className="w-full"
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <Mic className="h-6 w-6" />
+                          انطق الحرف
+                        </div>
+                      </MicrophoneButton>
+
+                      {lastResult && (
+                        <div className={`flex items-center justify-center gap-2 text-lg ${
+                          lastResult === "success" ? "text-green-500" : "text-red-500"
+                        }`}>
+                          {lastResult === "success" ? (
+                            <>
+                              <CheckCircle2 className="h-5 w-5" />
+                              أحسنت! نطقك صحيح
+                            </>
+                          ) : (
+                            <>
+                              <XCircle className="h-5 w-5" />
+                              المحاولة رقم {attempts}
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Card>
+
+            {attempts >= 3 && lastResult === "success" && (
+              <div className="flex justify-center">
+                <Button onClick={goToNextSection} size="lg" className="mt-4">
+                  التالي
+                  <ArrowLeft className="mr-2 h-6 w-6" />
+                </Button>
+              </div>
+            )}
           </div>
         );
 
