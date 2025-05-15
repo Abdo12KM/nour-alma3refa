@@ -32,14 +32,8 @@ interface LetterLessonProps {
       allSounds: string;
     };
     words: {
-      word1: {
-        text: string;
-        audio: string;
-      };
-      word2: {
-        text: string;
-        audio: string;
-      };
+      word1: string; // Changed from object to string
+      word2: string; // Changed from object to string
     };
     exercises: {
       findLetter: string;
@@ -58,26 +52,19 @@ interface LetterLessonProps {
 }
 
 const LESSON_SECTIONS = [
-  "introduction",      // Display letter and pronunciation
-  "pronunciation",     // Pronunciation practice with microphone
-  "letterForms",      // Letter shapes in different parts
-  "letterSearch",     // Search for letter among different letters
-  "writing",          // Writing practice with upload
-  "diacritics",       // Impact of diacritics
-  "words",            // Sample words using the letter
-  "completion"        // Closing and encouragement
+  "introduction", // Display letter and pronunciation
+  "pronunciation", // Pronunciation practice with microphone
+  "letterForms", // Letter shapes in different parts
+  "letterSearch", // Search for letter among different letters
+  "writing", // Writing practice with upload
+  "diacritics", // Impact of diacritics
+  "words", // Sample words using the letter
+  "completion", // Closing and encouragement
 ] as const;
 
-type LessonSection = typeof LESSON_SECTIONS[number];
+type LessonSection = (typeof LESSON_SECTIONS)[number];
 
-export function LetterLesson({
-  letter,
-  letterName,
-  audioFiles,
-  onComplete,
-  onNext,
-  onPrevious,
-}: LetterLessonProps) {
+export function LetterLesson({ letter, letterName, audioFiles, onComplete, onNext, onPrevious }: LetterLessonProps) {
   const [currentSection, setCurrentSection] = useState<LessonSection>("introduction");
   const [progress, setProgress] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -93,7 +80,7 @@ export function LetterLesson({
           setTimeout(goToNextSection, 1000);
         });
       }, 500);
-      
+
       return () => clearTimeout(timer);
     }
   }, [currentSection, audioFiles.letterFullIntro]);
@@ -103,7 +90,7 @@ export function LetterLesson({
       const timer = setTimeout(() => {
         playSound(audioFiles.feedback.lessonComplete, () => {});
       }, 500);
-      
+
       return () => clearTimeout(timer);
     }
   }, [currentSection, audioFiles.feedback.lessonComplete]);
@@ -161,17 +148,16 @@ export function LetterLesson({
 
       // Get the transcribed text and compare with the letter
       const transcribedText = data.text.trim();
-      
+
       // Check if the transcribed text matches the letter
       // We'll consider it correct if:
       // 1. The transcribed text exactly matches the letter
       // 2. The transcribed text contains the letter (in case they said "حرف الباء" for example)
       // 3. The transcribed text contains the letter name
-      const isCorrect = transcribedText === letter || 
-                       transcribedText.includes(letter) ||
-                       transcribedText.includes(letterName);
+      const isCorrect =
+        transcribedText === letter || transcribedText.includes(letter) || transcribedText.includes(letterName);
 
-      setAttempts(prev => prev + 1);
+      setAttempts((prev) => prev + 1);
 
       if (isCorrect) {
         setLastResult("success");
@@ -201,9 +187,7 @@ export function LetterLesson({
       case "introduction":
         return (
           <div className="space-y-12 text-center w-full">
-            <div className="text-[12rem] font-bold text-primary animate-bounce-slow">
-              {letter}
-            </div>
+            <div className="text-[12rem] font-bold text-primary animate-bounce-slow">{letter}</div>
             <div className="w-full max-w-3xl mx-auto">
               <h2 className="text-4xl font-bold mb-6">{letterName}</h2>
               <p className="text-2xl">جاري تشغيل الصوت...</p>
@@ -215,26 +199,17 @@ export function LetterLesson({
         return (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-center mb-8">تدريب النطق</h2>
-            
+
             <Card className="p-6 bg-background/50 border-primary/20">
               <div className="space-y-6">
-                <AudioButton
-                  audioSrc={audioFiles.letterSound}
-                  onAction={() => {}}
-                  className="w-full"
-                  variant="ghost"
-                >
+                <AudioButton audioSrc={audioFiles.letterSound} onAction={() => {}} className="w-full" variant="ghost">
                   <div className="flex items-center justify-center gap-2">
                     <Volume2 className="h-6 w-6" />
                     <p className="text-xl">اسمع نطق الحرف أولاً</p>
                   </div>
                 </AudioButton>
 
-                {error && (
-                  <div className="bg-destructive/15 text-destructive p-3 rounded-md text-center">
-                    {error}
-                  </div>
-                )}
+                {error && <div className="bg-destructive/15 text-destructive p-3 rounded-md text-center">{error}</div>}
 
                 <div className="relative">
                   {isProcessing ? (
@@ -243,10 +218,7 @@ export function LetterLesson({
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <MicrophoneButton
-                        onRecordingComplete={verifyPronunciation}
-                        className="w-full"
-                      >
+                      <MicrophoneButton onRecordingComplete={verifyPronunciation} className="w-full">
                         <div className="flex items-center justify-center gap-2">
                           <Mic className="h-6 w-6" />
                           انطق الحرف
@@ -254,9 +226,11 @@ export function LetterLesson({
                       </MicrophoneButton>
 
                       {lastResult && (
-                        <div className={`flex items-center justify-center gap-2 text-lg ${
-                          lastResult === "success" ? "text-green-500" : "text-red-500"
-                        }`}>
+                        <div
+                          className={`flex items-center justify-center gap-2 text-lg ${
+                            lastResult === "success" ? "text-green-500" : "text-red-500"
+                          }`}
+                        >
                           {lastResult === "success" ? (
                             <>
                               <CheckCircle2 className="h-5 w-5" />
@@ -426,42 +400,42 @@ export function LetterLesson({
 
       case "words":
         const letterWords = {
-          'أ': [
+          أ: [
             { text: "أسد", audio: "/audio/letters/alef/words/word1.wav" },
-            { text: "أرنب", audio: "/audio/letters/alef/words/word2.wav" }
+            { text: "أرنب", audio: "/audio/letters/alef/words/word2.wav" },
           ],
-          'ب': [
+          ب: [
             { text: "باب", audio: "/audio/letters/ba/words/word1.wav" },
-            { text: "بطة", audio: "/audio/letters/ba/words/word2.wav" }
+            { text: "بطة", audio: "/audio/letters/ba/words/word2.wav" },
           ],
-          'ت': [
+          ت: [
             { text: "تفاح", audio: "/audio/letters/ta/words/word1.wav" },
-            { text: "تمساح", audio: "/audio/letters/ta/words/word2.wav" }
+            { text: "تمساح", audio: "/audio/letters/ta/words/word2.wav" },
           ],
-          'ث': [
+          ث: [
             { text: "ثعلب", audio: "/audio/letters/tha/words/word1.wav" },
-            { text: "ثلج", audio: "/audio/letters/tha/words/word2.wav" }
+            { text: "ثلج", audio: "/audio/letters/tha/words/word2.wav" },
           ],
-          'ج': [
+          ج: [
             { text: "جمل", audio: "/audio/letters/jeem/words/word1.wav" },
-            { text: "جبل", audio: "/audio/letters/jeem/words/word2.wav" }
-          ]
+            { text: "جبل", audio: "/audio/letters/jeem/words/word2.wav" },
+          ],
         }[letter] || [
           { text: "كلمة ١", audio: "" },
-          { text: "كلمة ٢", audio: "" }
+          { text: "كلمة ٢", audio: "" },
         ];
 
         return (
           <div className="space-y-8 w-full">
             <h2 className="text-3xl font-bold text-center mb-8">كلمات تبدأ بحرف {letter}</h2>
             <div className="grid grid-cols-2 gap-12 w-full">
-              <Card 
+              <Card
                 className="p-12 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center cursor-pointer"
                 onClick={() => playSound(letterWords[0].audio, () => {})}
               >
                 <div className="text-8xl font-bold">{letterWords[0].text}</div>
               </Card>
-              <Card 
+              <Card
                 className="p-12 text-center h-full hover:bg-accent/50 transition-colors flex flex-col items-center justify-center cursor-pointer"
                 onClick={() => playSound(letterWords[1].audio, () => {})}
               >
@@ -476,11 +450,7 @@ export function LetterLesson({
           <div className="space-y-8 text-center">
             <h2 className="text-4xl font-bold mb-4">أحسنت!</h2>
             <p className="text-xl">لقد أتممت درس حرف {letterName}</p>
-            <Button
-              onClick={onComplete}
-              size="lg"
-              className="w-full max-w-md mx-auto p-8"
-            >
+            <Button onClick={onComplete} size="lg" className="w-full max-w-md mx-auto p-8">
               أنهي الدرس
             </Button>
           </div>
@@ -494,7 +464,7 @@ export function LetterLesson({
   return (
     <div className="w-full h-full">
       <Progress value={progress} className="w-full" />
-      
+
       <div className="w-full h-[calc(100vh-12rem)] flex flex-col items-center justify-center p-8">
         {renderSection()}
       </div>
@@ -512,11 +482,7 @@ export function LetterLesson({
         </Button>
 
         {currentSection !== "completion" && (
-          <Button 
-            onClick={goToNextSection} 
-            className="min-w-[160px] text-xl py-6"
-            size="lg"
-          >
+          <Button onClick={goToNextSection} className="min-w-[160px] text-xl py-6" size="lg">
             التالي
             <ArrowLeft className="mr-2 h-6 w-6" />
           </Button>
@@ -538,4 +504,3 @@ export function LetterLesson({
     </div>
   );
 }
- 

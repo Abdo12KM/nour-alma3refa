@@ -198,8 +198,11 @@ type LetterPageProps = {
 };
 
 // Client component
-function LetterPageClient({ letterData, letter }: { 
-  letterData: typeof LETTERS_DATA[keyof typeof LETTERS_DATA];
+function LetterPageClient({
+  letterData,
+  letter,
+}: {
+  letterData: (typeof LETTERS_DATA)[keyof typeof LETTERS_DATA];
   letter: keyof typeof LETTERS_DATA;
 }) {
   const router = useRouter();
@@ -261,7 +264,7 @@ export default function LetterPage({ params }: LetterPageProps) {
   const resolvedParams = use(params);
   // Decode the URL-encoded letter parameter
   const decodedLetter = decodeURIComponent(resolvedParams.letter);
-  
+
   // Check if the decoded letter exists in our data
   if (!(decodedLetter in LETTERS_DATA)) {
     notFound();
@@ -269,4 +272,4 @@ export default function LetterPage({ params }: LetterPageProps) {
 
   const letterData = LETTERS_DATA[decodedLetter as keyof typeof LETTERS_DATA];
   return <LetterPageClient letterData={letterData} letter={decodedLetter as keyof typeof LETTERS_DATA} />;
-} 
+}
