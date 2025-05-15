@@ -18,6 +18,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { motion } from "framer-motion";
 import { AudioButton } from "@/components/ui/audio-button";
 import { Marquee } from "@/components/magicui/marquee";
+import { VideoButton } from "@/components/ui/video-button";
 
 // Animation variants
 const fadeIn = {
@@ -109,7 +110,7 @@ export default function Home() {
       >
         <div className="container mx-auto px-4 relative z-10">
           <motion.h1
-            className="flex gap-3 p-1 justify-center text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70"
+            className="flex gap-3 p-1 justify-center items-center text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
@@ -132,7 +133,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6, duration: 0.5 }}
             whileHover={{ scale: 1.05 }}
-            className="relative"
+            className="relative flex flex-col items-center gap-4"
           >
             <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-primary/40 rounded-xl blur-xl opacity-70 group-hover:opacity-100 transition duration-1000 animate-pulse"></div>
             <AudioButton
@@ -145,6 +146,11 @@ export default function Home() {
               ابدأ التعلم
               <ArrowRightIcon className="mr-2 h-5 w-5" />
             </AudioButton>
+
+            <VideoButton 
+              className="relative text-base" 
+              audioSrc="/audio/how-to-learn-intro.wav"
+            />
           </motion.div>
         </div>
 
