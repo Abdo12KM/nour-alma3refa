@@ -7,6 +7,15 @@ import { ArrowRightIcon } from "lucide-react";
 import { useAudioStore } from "@/lib/audio";
 import { useAuthStore } from "@/lib/auth";
 import { useEffect } from "react";
+import { LetterCard } from "@/components/letters/LetterCard";
+
+const AVAILABLE_LETTERS = [
+  { letter: "أ", name: "الألف", audioSrc: "/audio/letters/alef/letter-name.wav" },
+  { letter: "ب", name: "الباء", audioSrc: "/audio/letters/ba/letter-name.wav" },
+  { letter: "ت", name: "التاء", audioSrc: "/audio/letters/ta/letter-name.wav" },
+  { letter: "ث", name: "الثاء", audioSrc: "/audio/letters/tha/letter-name.wav" },
+  { letter: "ج", name: "الجيم", audioSrc: "/audio/letters/jeem/letter-name.wav" },
+];
 
 export default function LettersLessonPage() {
   const router = useRouter();
@@ -24,6 +33,12 @@ export default function LettersLessonPage() {
   if (!isAuthenticated) {
     return null;
   }
+
+  const handleLetterClick = (letter: string) => {
+    // Encode the Arabic letter for the URL
+    const encodedLetter = encodeURIComponent(letter);
+    router.push(`/lessons/letters/${encodedLetter}`);
+  };
 
   return (
     <PageWrapper>
@@ -79,6 +94,20 @@ export default function LettersLessonPage() {
               العودة إلى الصفحة الرئيسية
             </Button>
           </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
+          {AVAILABLE_LETTERS.map((letterData, index) => (
+            <LetterCard
+              key={letterData.letter}
+              letter={letterData.letter}
+              name={letterData.name}
+              audioSrc={letterData.audioSrc}
+              isLocked={false} // You can implement a progress system later
+              isCompleted={false} // You can implement a progress system later
+              onClick={() => handleLetterClick(letterData.letter)}
+            />
+          ))}
         </div>
       </main>
     </PageWrapper>

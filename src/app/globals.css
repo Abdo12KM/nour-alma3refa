@@ -10,6 +10,17 @@ body {
   .btn-active-combined {
     animation: button-pulse 1.5s ease-in-out infinite, button-bounce 1.5s ease-in-out infinite;
   }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+    .animate-button-pulse {
+    animation: button-pulse 4s ease-in-out infinite;
+  }
+  
+  .animate-button-active {
+    animation: button-active 0.8s ease-in-out;
+  }
 
   .module-card {
     transition: all 0.2s ease;
@@ -92,6 +103,39 @@ body {
 }
 
 @theme inline {
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+    @keyframes button-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.02);
+    }
+  }
+  
+  @keyframes button-active {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
   @keyframes shiny-text {
   0%, 90%, 100% {
     background-position: calc(-100% - var(--shiny-width)) 0;

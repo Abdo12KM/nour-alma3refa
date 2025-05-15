@@ -23,6 +23,7 @@ import {
 } from "framer-motion";
 import { AudioButton } from "@/components/ui/audio-button";
 import { Marquee } from "@/components/magicui/marquee";
+import { VideoButton } from "@/components/ui/video-button";
 
 // Animation variants
 const fadeIn = {
@@ -285,6 +286,10 @@ export default function Home() {
                 />
                 <Lightbulb className="w-14 h-14 text-blue-500" />
               </motion.div>
+              <VideoButton 
+              className="relative text-base" 
+              audioSrc="/audio/how-to-learn-intro.wav"
+            />
             </motion.h1>
 
             <motion.p

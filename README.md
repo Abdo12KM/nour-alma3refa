@@ -53,7 +53,7 @@ Nour al-Ma'rifa addresses the challenge of foundational illiteracy in Egypt by o
 5. Using the temporary Guest Login:
    - For quick access to learning modules without registration, use the "Guest Login" button
    - This will take you to the learning selection page with modules for Arabic letters, numbers, and words
-   - *Note: This button is intended for development/testing and will be removed in production*
+   - _Note: This button is intended for development/testing and will be removed in production_
 
 ## Project Structure
 
