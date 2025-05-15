@@ -53,18 +53,19 @@ export function WritingExercise({
       const formData = new FormData();
       formData.append("file", imageBlob, "captured_writing.jpg");
 
-      // Send to OCR API
-      const response = await fetch("https://illiteracy-api.onrender.com/predict/", {
+      // Send to our Gemini-based API endpoint
+      const response = await fetch("/api/detect-letter", {
         method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error("Failed to analyze image");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to analyze image");
       }
 
       const data = await response.json();
-      console.log("API Response:", data);
+      console.log("Gemini API Response:", data);
       
       // Store the response for display
       setLastResponse(JSON.stringify({
