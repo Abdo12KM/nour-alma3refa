@@ -32,15 +32,6 @@ export default function LearnPage() {
     return () => clearTimeout(timer);
   }, [isAuthenticated, router, username]);
 
-  // Debug panel for development
-  const AuthDebug = () =>
-    process.env.NODE_ENV === "development" ? (
-      <div className="fixed top-4 right-4 bg-black/60 text-white p-2 rounded text-xs z-50">
-        <div>Auth: {isAuthenticated ? "✅" : "❌"}</div>
-        <div>User: {username || "N/A"}</div>
-      </div>
-    ) : null;
-
   // Show loading state
   if (isLoading) {
     return (

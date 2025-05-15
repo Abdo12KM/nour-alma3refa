@@ -1,30 +1,172 @@
 {
-    "choose-login-method": "هنا ممكن تختار طريقة تسجيل الدخول لحسابك.",
-    "text-login": "عشان تدخل باسم المستخدم وكلمة المرور، دوس تاني.",
-    "voice-login": "عشان تدخل بصوتك، دوس تاني.",
-    "go-to-register": "عشان تعمل حساب جديد، دوس تاني.",
-    "enter-pin": "عشان تدخل بالرقم السري، دوس تاني.",
-    "welcome-home": "أهلاً بيك في تطبيق نور المعرفة.",
-    "start-letters-lesson": "عشان تبدأ درس الحروف، دوس تاني.",
-    "start-numbers-lesson": "عشان تبدأ درس الأرقام، دوس تاني.",
-    "view-progress": "عشان تشوف تقدمك، دوس تاني.",
-    "logout": "عشان تخرج من حسابك، دوس تاني.",
-    "login-button": "ده زرار عشان تدخل على حسابك. عشان تأكد دوس تاني.",
-    "register-button": "ده زرار عشان تعمل حساب جديد. عشان تأكد دوس تاني.",
-    "choose-registration-method": "هنا ممكن تختار طريقة تسجيل حساب جديد.",
-    "text-registration": "عشان تسجل باسم المستخدم وكلمة المرور، دوس تاني.",
-    "voice-registration": "عشان تسجل بصوتك، دوس تاني.",
-    "go-to-login": "لو عندك حساب قبل كده، دوس تاني.",
-    "create-pin": "عشان تأكد الرقم السري بتاعك، دوس تاني.",
-    "go-to-homepage": "عشان تروح للصفحة الرئيسية، دوس تاني.",
-    "record-name-instruction": "من فضلك قول اسمك بصوت واضح. عشان تسجل، دوس تاني.",
-    "confirm-name": "عشان تأكد على اسمك، دوس تاني.",
-    "record-userid-instruction": "من فضلك قول رقم المستخدم بتاعك بصوت واضح. عشان تسجل، دوس تاني.",
-    "confirm-userid": "عشان تأكد على رقم المستخدم بتاعك، دوس تاني.",
-    "name-confirmation": "اسمك هو. اذا كان صحيح، دوس تأكيد. لو عايز تغيره، دوس إعادة التسجيل.",
-    "try-again": "لم نفهم ما قلته. من فضلك حاول مرة ثانية.",
-    "userid-confirmation": "رقم المستخدم الخاص بك هو. اذا كان صحيح، دوس تأكيد. لو عايز تغيره، دوس إعادة التسجيل.",
-    "confirm-pin": "عشان تأكد الرقم السري، دوس تاني.",
-    "invalid-pin-format": "الرقم السري غير صحيح. يجب أن يكون الرقم السري 4 أرقام.",
-    "go-back": "عشان ترجع للخطوة السابقة، دوس تاني."
+  "alef": {
+    "basic": {
+      "letter-name.wav": "هذا حرف الألف",
+      "letter-sound.wav": "صوت الحرف أَ",
+      "letter-full-intro.wav": "هذا حرف الألف. اسمه ألف، وصوته أَ"
+    },
+    "forms": {
+      "initial.wav": "في أول الكلمة أ",
+      "middle.wav": "في النص ـأـ",
+      "final.wav": "في الآخر ـأ",
+      "all-forms.wav": "حرف الألف ليه أشكال مختلفة. في أول الكلمة أ، وفي النص ـأـ، وفي الآخر ـأ"
+    },
+    "diacritics": {
+      "fatha.wav": "أَ",
+      "damma.wav": "أُ",
+      "kasra.wav": "إِ",
+      "sukoon.wav": "أْ",
+      "all-sounds.wav": "اسمع الأصوات المختلفة لحرف الألف: أَ، أُ، إِ، أْ"
+    },
+    "words": {
+      "word1.wav": "أسد",
+      "word2.wav": "أرنب"
+    },
+    "exercises": {
+      "find-letter.wav": "دور على حرف الألف ودوس عليه",
+      "pronounce.wav": "قول معايا: أَ",
+      "write-letter.wav": "اكتب حرف الألف"
+    },
+    "feedback": {
+      "correct.wav": "ممتاز! برافو عليك",
+      "try-again.wav": "حاول مرة كمان",
+      "lesson-complete.wav": "برافو! خلصت درس حرف الألف"
+    }
+  },
+  "ba": {
+    "basic": {
+      "letter-name.wav": "هذا حرف الباء",
+      "letter-sound.wav": "صوت الحرف بَ",
+      "letter-full-intro.wav": "هذا حرف الباء. اسمه باء، وصوته بَ"
+    },
+    "forms": {
+      "initial.wav": "في أول الكلمة بـ",
+      "middle.wav": "في النص ـبـ",
+      "final.wav": "في الآخر ـب",
+      "all-forms.wav": "حرف الباء ليه أشكال مختلفة. في أول الكلمة بـ، وفي النص ـبـ، وفي الآخر ـب"
+    },
+    "diacritics": {
+      "fatha.wav": "بَ",
+      "damma.wav": "بُ",
+      "kasra.wav": "بِ",
+      "sukoon.wav": "بْ",
+      "all-sounds.wav": "اسمع الأصوات المختلفة لحرف الباء: بَ، بُ، بِ، بْ"
+    },
+    "words": {
+      "word1.wav": "باب",
+      "word2.wav": "بطة"
+    },
+    "exercises": {
+      "find-letter.wav": "دور على حرف الباء ودوس عليه",
+      "pronounce.wav": "قول معايا: بَ",
+      "write-letter.wav": "اكتب حرف الباء"
+    },
+    "feedback": {
+      "correct.wav": "ممتاز! برافو عليك",
+      "try-again.wav": "حاول مرة كمان",
+      "lesson-complete.wav": "برافو! خلصت درس حرف الباء"
+    }
+  },
+  "ta": {
+    "basic": {
+      "letter-name.wav": "هذا حرف التاء",
+      "letter-sound.wav": "صوت الحرف تَ",
+      "letter-full-intro.wav": "هذا حرف التاء. اسمه تاء، وصوته تَ"
+    },
+    "forms": {
+      "initial.wav": "في أول الكلمة تـ",
+      "middle.wav": "في النص ـتـ",
+      "final.wav": "في الآخر ـت",
+      "all-forms.wav": "حرف التاء ليه أشكال مختلفة. في أول الكلمة تـ، وفي النص ـتـ، وفي الآخر ـت"
+    },
+    "diacritics": {
+      "fatha.wav": "تَ",
+      "damma.wav": "تُ",
+      "kasra.wav": "تِ",
+      "sukoon.wav": "تْ",
+      "all-sounds.wav": "اسمع الأصوات المختلفة لحرف التاء: تَ، تُ، تِ، تْ"
+    },
+    "words": {
+      "word1.wav": "تفاح",
+      "word2.wav": "تمساح"
+    },
+    "exercises": {
+      "find-letter.wav": "دور على حرف التاء ودوس عليه",
+      "pronounce.wav": "قول معايا: تَ",
+      "write-letter.wav": "اكتب حرف التاء"
+    },
+    "feedback": {
+      "correct.wav": "ممتاز! برافو عليك",
+      "try-again.wav": "حاول مرة كمان",
+      "lesson-complete.wav": "برافو! خلصت درس حرف التاء"
+    }
+  },
+  "tha": {
+    "basic": {
+      "letter-name.wav": "هذا حرف الثاء",
+      "letter-sound.wav": "صوت الحرف ثَ",
+      "letter-full-intro.wav": "هذا حرف الثاء. اسمه ثاء، وصوته ثَ"
+    },
+    "forms": {
+      "initial.wav": "في أول الكلمة ثـ",
+      "middle.wav": "في النص ـثـ",
+      "final.wav": "في الآخر ـث",
+      "all-forms.wav": "حرف الثاء ليه أشكال مختلفة. في أول الكلمة ثـ، وفي النص ـثـ، وفي الآخر ـث"
+    },
+    "diacritics": {
+      "fatha.wav": "ثَ",
+      "damma.wav": "ثُ",
+      "kasra.wav": "ثِ",
+      "sukoon.wav": "ثْ",
+      "all-sounds.wav": "اسمع الأصوات المختلفة لحرف الثاء: ثَ، ثُ، ثِ، ثْ"
+    },
+    "words": {
+      "word1.wav": "ثعلب",
+      "word2.wav": "ثلج"
+    },
+    "exercises": {
+      "find-letter.wav": "دور على حرف الثاء ودوس عليه",
+      "pronounce.wav": "قول معايا: ثَ",
+      "write-letter.wav": "اكتب حرف الثاء"
+    },
+    "feedback": {
+      "correct.wav": "ممتاز! برافو عليك",
+      "try-again.wav": "حاول مرة كمان",
+      "lesson-complete.wav": "برافو! خلصت درس حرف الثاء"
+    }
+  },
+  "jeem": {
+    "basic": {
+      "letter-name.wav": "هذا حرف الجيم",
+      "letter-sound.wav": "صوت الحرف جَ",
+      "letter-full-intro.wav": "هذا حرف الجيم. اسمه جيم، وصوته جَ"
+    },
+    "forms": {
+      "initial.wav": "في أول الكلمة جـ",
+      "middle.wav": "في النص ـجـ",
+      "final.wav": "في الآخر ـج",
+      "all-forms.wav": "حرف الجيم ليه أشكال مختلفة. في أول الكلمة جـ، وفي النص ـجـ، وفي الآخر ـج"
+    },
+    "diacritics": {
+      "fatha.wav": "جَ",
+      "damma.wav": "جُ",
+      "kasra.wav": "جِ",
+      "sukoon.wav": "جْ",
+      "all-sounds.wav": "اسمع الأصوات المختلفة لحرف الجيم: جَ، جُ، جِ، جْ"
+    },
+    "words": {
+      "word1.wav": "جمل",
+      "word2.wav": "جبل"
+    },
+    "exercises": {
+      "find-letter.wav": "دور على حرف الجيم ودوس عليه",
+      "pronounce.wav": "قول معايا: جَ",
+      "write-letter.wav": "اكتب حرف الجيم"
+    },
+    "feedback": {
+      "correct.wav": "ممتاز! برافو عليك",
+      "try-again.wav": "حاول مرة كمان",
+      "lesson-complete.wav": "برافو! خلصت درس حرف الجيم"
+    }
   }
+}

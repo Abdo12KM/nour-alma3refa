@@ -32,9 +32,6 @@ export async function POST(request: NextRequest) {
     const { name, pin } = validatedData.data;
     const userId = await createUser(name, pin);
 
-    // Get the next user ID (for information display)
-    const nextId = await getNextUserId();
-
     // Return the user ID (the one that was just created)
     return NextResponse.json({
       success: true,
