@@ -1,14 +1,16 @@
-import React, { useState, useId } from 'react';
-import { Button, ButtonProps } from '@/components/ui/button';
-import { useAudioStore } from '@/lib/audio';
-import { Volume2Icon } from 'lucide-react';
+import React, { useState, useId } from "react";
+import { Button, ButtonProps } from "@/components/ui/button";
+import { useAudioStore } from "@/lib/audio";
+import { useNavigationStore } from "@/lib/navigation-store";
+import { Volume2Icon } from "lucide-react";
 
 interface AudioButtonProps extends ButtonProps {
   audioSrc: string;
   onAction: () => void;
   icon?: React.ReactNode;
   showSoundIcon?: boolean;
-  buttonId?: string;  // Optional custom ID for the button
+  buttonId?: string; // Optional custom ID for the button
+  immediateAction?: boolean; // Execute action automatically after audio finishes
 }
 
 export function AudioButton({
@@ -20,17 +22,20 @@ export function AudioButton({
   children,
   disabled,
   buttonId,
+  immediateAction = false,
   ...props
 }: AudioButtonProps) {
-  const generatedId = useId(); // Generate a unique ID if none provided
+  const generatedId = useId();
   const uniqueButtonId = buttonId || generatedId;
-  const { playSound, isPlaying, stopSound, activeButtonId, clearActiveButton } = useAudioStore();
-  const [selfTimeoutId, setSelfTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  
-  // Determine if this button is ready for action
+  const { playSound, isPlaying, stopSound, activeButtonId, clearActiveButton } =
+    useAudioStore();
+  const { twoClickEnabled } = useNavigationStore();
+  const [selfTimeoutId, setSelfTimeoutId] = useState<NodeJS.Timeout | null>(
+    null
+  );
+
   const isReadyForAction = activeButtonId === uniqueButtonId;
-  
-  // Clear the timeout when component unmounts
+
   React.useEffect(() => {
     return () => {
       if (selfTimeoutId) {
@@ -38,70 +43,87 @@ export function AudioButton({
       }
     };
   }, [selfTimeoutId]);
-    const handleClick = () => {
-    // If this button is ready for action and audio is not playing, execute the action
+
+  const handleClick = () => {
+    // If two-click mode is disabled, execute action immediately
+    if (!twoClickEnabled) {
+      onAction();
+      return;
+    }
+
+    // In two-click mode
     if (isReadyForAction && !isPlaying) {
-      // Clear active button state
+      // This is a second click
       clearActiveButton();
-      
-      // Clear timeout
+
       if (selfTimeoutId) {
         clearTimeout(selfTimeoutId);
         setSelfTimeoutId(null);
       }
-      
-      // Properly stop any ongoing audio before navigation
+
       stopSound();
-      
-      // Execute action immediately without audio playback to fix navigation issues
       onAction();
     } else if (!isPlaying) {
-      // Otherwise, play the sound and set this button to ready state
-      playSound(audioSrc, () => {
-        // The button ID is now tracked in the global store
-        // Set timeout to reset ready state after 30 seconds
-        const timeoutId = setTimeout(() => {
-          clearActiveButton();
-          setSelfTimeoutId(null);
-        }, 30000);
-        
-        setSelfTimeoutId(timeoutId);
-      }, uniqueButtonId);
+      // This is a first click
+      playSound(
+        audioSrc,
+        () => {
+          // After audio finished playing
+
+          if (immediateAction) {
+            // Auto-execute the action if immediateAction is true
+            clearActiveButton();
+            onAction();
+          } else {
+            // Set timeout for the regular two-click flow
+            const timeoutId = setTimeout(() => {
+              clearActiveButton();
+              setSelfTimeoutId(null);
+            }, 30000);
+
+            setSelfTimeoutId(timeoutId);
+          }
+        },
+        uniqueButtonId
+      );
     }
-    // If audio is playing, do nothing (button is disabled)
   };
-  
-  // Determine if button should be disabled
-  // Button is disabled when audio is playing OR if disabled prop is passed
+
   const buttonDisabled = isPlaying || disabled;
-  // Preserve the original variant from props
-  const originalVariant = props.variant || 'default';
-    // Apply the selected styling using className instead of changing the variant
-  // Add class for both bounce and pulse animations
-  return (    <Button 
+  const originalVariant = props.variant || "default";
+
+  return (
+    <Button
       className={`${className} transition-all ${
-        isReadyForAction 
-          ? 'relative z-10 ring-2 ring-primary shadow-md animate-button-active scale-105' 
-          : ''
+        isReadyForAction && twoClickEnabled && !immediateAction
+          ? "relative z-10 ring-2 ring-primary shadow-md animate-button-active scale-105"
+          : ""
       }`}
       onClick={handleClick}
       disabled={buttonDisabled}
       variant={originalVariant as any}
-      data-active={isReadyForAction}
+      data-active={isReadyForAction && twoClickEnabled && !immediateAction}
       {...props}
     >
       {icon}
       {children}
-      {showSoundIcon && isReadyForAction && !isPlaying && (
-        <Volume2Icon className="ml-2 h-5 w-5 animate-pulse text-primary" />
-      )}
-        {/* Add a more obvious glow effect for selected buttons */}
-      {isReadyForAction && !isPlaying && (
-        <>
-          <span className="absolute inset-0 -z-10 rounded-md bg-primary/20 blur-md"></span>
-          <span className="absolute -inset-1 -z-20 rounded-lg bg-primary/10 blur-lg animate-pulse"></span>
-        </>
-      )}
+      {showSoundIcon &&
+        isReadyForAction &&
+        twoClickEnabled &&
+        !isPlaying &&
+        !immediateAction && (
+          <Volume2Icon className="ml-2 h-5 w-5 animate-pulse text-secondary dark:text-blue-500" />
+        )}
+
+      {isReadyForAction &&
+        twoClickEnabled &&
+        !isPlaying &&
+        !immediateAction && (
+          <>
+            <span className="absolute inset-0 -z-10 rounded-md bg-primary/20 blur-md"></span>
+            <span className="absolute -inset-1 -z-20 rounded-lg bg-primary/10 blur-lg animate-pulse"></span>
+          </>
+        )}
     </Button>
   );
 }

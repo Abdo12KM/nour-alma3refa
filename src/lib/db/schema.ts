@@ -1,7 +1,22 @@
-import { boolean, foreignKey, integer, jsonb, pgEnum, pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  foreignKey,
+  integer,
+  jsonb,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 // Enum for badge types
-export const badgeTypeEnum = pgEnum("badge_type", ["letter_completion", "number_completion", "practice_streak"]);
+export const badgeTypeEnum = pgEnum("badge_type", [
+  "letter_completion",
+  "number_completion",
+  "practice_streak",
+]);
 
 // Users table - stores user information and authentication
 export const users = pgTable("users", {
@@ -26,7 +41,7 @@ export const learningContent = pgTable("learning_content", {
   variants: jsonb("variants"), // Different forms of the letter (start, middle, end)
   exampleWords: jsonb("example_words"), // Example words with this letter, but for number may be null
   audio: text("audio"), // Path or URL to audio file
-  imageUrl: text("image_url"), // Optional image 
+  imageUrl: text("image_url"), // Optional image
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   isActive: boolean("is_active").default(true).notNull(),
@@ -35,8 +50,12 @@ export const learningContent = pgTable("learning_content", {
 // User progress tracking
 export const userProgress = pgTable("user_progress", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  contentId: integer("content_id").notNull().references(() => learningContent.id, { onDelete: "cascade" }),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  contentId: integer("content_id")
+    .notNull()
+    .references(() => learningContent.id, { onDelete: "cascade" }),
   completed: boolean("completed").default(false).notNull(),
   correctAttempts: integer("correct_attempts").default(0).notNull(),
   totalAttempts: integer("total_attempts").default(0).notNull(),
@@ -58,15 +77,21 @@ export const badges = pgTable("badges", {
 // User earned badges
 export const userBadges = pgTable("user_badges", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  badgeId: integer("badge_id").notNull().references(() => badges.id, { onDelete: "cascade" }),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  badgeId: integer("badge_id")
+    .notNull()
+    .references(() => badges.id, { onDelete: "cascade" }),
   earnedAt: timestamp("earned_at").defaultNow().notNull(),
 });
 
 // Exercises table
 export const exercises = pgTable("exercises", {
   id: serial("id").primaryKey(),
-  contentId: integer("content_id").notNull().references(() => learningContent.id, { onDelete: "cascade" }),
+  contentId: integer("content_id")
+    .notNull()
+    .references(() => learningContent.id, { onDelete: "cascade" }),
   type: text("type").notNull(), // pronunciation, identification
   instructions: text("instructions").notNull(),
   data: jsonb("data"), // Exercise specific data
@@ -79,8 +104,12 @@ export const exercises = pgTable("exercises", {
 // User exercise attempts
 export const userExerciseAttempts = pgTable("user_exercise_attempts", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  exerciseId: integer("exercise_id").notNull().references(() => exercises.id, { onDelete: "cascade" }),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  exerciseId: integer("exercise_id")
+    .notNull()
+    .references(() => exercises.id, { onDelete: "cascade" }),
   successful: boolean("successful").default(false).notNull(),
   pointsEarned: integer("points_earned").default(0).notNull(),
   attemptedAt: timestamp("attempted_at").defaultNow().notNull(),

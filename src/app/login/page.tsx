@@ -7,28 +7,42 @@ import { AudioButton } from "@/components/ui/audio-button";
 import { PinInput } from "@/components/ui/PinInput";
 import { RecordPinStep } from "@/components/auth/RecordPinStep";
 import { RecordUserIdStep } from "@/components/auth/RecordUserIdStep";
-import { UserPlusIcon, LockIcon, MicIcon, KeyboardIcon, ArrowLeftIcon } from "lucide-react";
+import {
+  UserPlusIcon,
+  LockIcon,
+  MicIcon,
+  KeyboardIcon,
+  ArrowLeftIcon,
+} from "lucide-react";
 import { useAuthStore } from "@/lib/auth";
 import { useAudioStore } from "@/lib/audio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigationStore } from "@/lib/navigation-store";
 
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [step, setStep] = useState<"method" | "textId" | "voiceId" | "pin" | "voicePin">(
-    "method"
-  );
+  const [step, setStep] = useState<
+    "method" | "textId" | "voiceId" | "pin" | "voicePin"
+  >("method");
   const [loginMethod, setLoginMethod] = useState<"text" | "voice">("text");
   const [userId, setUserId] = useState<number | null>(null);
   const { login, isAuthenticated } = useAuthStore();
+  const { twoClickEnabled } = useNavigationStore();
   const { stopSound } = useAudioStore();
 
+  // Add console logs for authentication state
   useEffect(() => {
+    console.log(
+      `[Login] Component mounted, isAuthenticated=${isAuthenticated}`
+    );
+
     // Redirect if already authenticated
     if (isAuthenticated) {
-      router.push("/");
+      console.log(`[Login] User already authenticated, redirecting to home`);
+      router.replace("/");
     }
 
     // Cleanup audio on component unmount
@@ -82,6 +96,8 @@ export default function LoginPage() {
     setIsLoading(true);
     setErrorMessage(null);
 
+    console.log(`[Login] Attempting login for userId=${userId}`);
+
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -95,17 +111,32 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
+      console.log(`[Login] Login response:`, data);
 
       if (data.success) {
+        console.log(
+          `[Login] Login successful, calling login(${data.userId}, ${data.name})`
+        );
+
         // Login the user
         login(data.userId, data.name);
-        // Redirect to home page
-        router.push("/");
+
+        // Force a wait for localStorage to be updated
+        setTimeout(() => {
+          // Check auth state before redirecting
+          const currentState = useAuthStore.getState();
+          console.log(`[Login] Auth state before redirect:`, currentState);
+
+          // Redirect to home page
+          console.log(`[Login] Redirecting to home page`);
+          router.push("/");
+        }, 300);
       } else {
+        console.log(`[Login] Login failed: ${data.error || "Unknown error"}`);
         setErrorMessage("رقم المستخدم أو الرمز السري غير صحيح");
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error(`[Login] Error during login:`, error);
       setErrorMessage("حدث خطأ أثناء تسجيل الدخول");
     } finally {
       setIsLoading(false);
@@ -117,12 +148,12 @@ export default function LoginPage() {
     return (
       <AuthLayout
         title="تسجيل الدخول"
-        welcomeAudioSrc="/audio/choose-login-method.wav"
+        welcomeAudioSrc={
+          twoClickEnabled ? "/audio/choose-login-method.wav" : undefined
+        }
       >
         <div className="space-y-6 text-center">
-          <div className="text-xl my-6">
-            اختر طريقة تسجيل الدخول المناسبة لك
-          </div>
+          <div className="text-xl">اختر طريقة تسجيل الدخول المناسبة لك</div>
 
           <AudioButton
             audioSrc="/audio/text-login.wav"
@@ -151,15 +182,6 @@ export default function LoginPage() {
           >
             تسجيل حساب جديد
           </AudioButton>
-          
-          <Button 
-            variant="ghost" 
-            className="mt-4 w-full"
-            onClick={() => router.push("/")}
-          >
-            <ArrowLeftIcon className="ml-2 h-5 w-5" />
-            العودة للصفحة الرئيسية
-          </Button>
         </div>
       </AuthLayout>
     );
@@ -193,16 +215,16 @@ export default function LoginPage() {
             <Button type="submit" className="w-full py-4 text-xl">
               متابعة
             </Button>
-            
-            <Button 
-              type="button"
-              variant="ghost" 
-              className="w-full mt-2"
-              onClick={() => setStep("method")}
+
+            <AudioButton
+              audioSrc="/audio/go-back.wav"
+              onAction={() => setStep("method")}
+              icon={<ArrowLeftIcon className="ml-2 h-5 w-5" />}
+              className="w-full py-4 text-xl"
+              variant={"outline"}
             >
-              <ArrowLeftIcon className="ml-2 h-5 w-5" />
               رجوع
-            </Button>
+            </AudioButton>
           </div>
         </form>
       </AuthLayout>
@@ -214,19 +236,20 @@ export default function LoginPage() {
     return (
       <AuthLayout title="تسجيل رقم المستخدم">
         <RecordUserIdStep onComplete={handleVoiceIdComplete} />
-        
-        <Button 
-          variant="ghost" 
-          className="w-full mt-4"
-          onClick={() => setStep("method")}
+
+        <AudioButton
+          audioSrc="/audio/go-back.wav"
+          onAction={() => setStep("method")}
+          icon={<ArrowLeftIcon className="ml-2 h-5 w-5" />}
+          className="w-full py-4 text-xl"
+          variant={"outline"}
         >
-          <ArrowLeftIcon className="ml-2 h-5 w-5" />
           رجوع
-        </Button>
+        </AudioButton>
       </AuthLayout>
     );
   }
-  
+
   // Voice PIN input
   if (step === "voicePin") {
     return (
@@ -247,15 +270,16 @@ export default function LoginPage() {
             audioSrc="/audio/enter-pin.wav"
             actionLabel="تسجيل الدخول"
           />
-          
-          <Button 
-            variant="ghost" 
-            className="w-full mt-4"
-            onClick={() => setStep("voiceId")}
+
+          <AudioButton
+            audioSrc="/audio/go-back.wav"
+            onAction={() => setStep("voiceId")}
+            icon={<ArrowLeftIcon className="ml-2 h-5 w-5" />}
+            className="w-full py-4 text-xl"
+            variant={"outline"}
           >
-            <ArrowLeftIcon className="ml-2 h-5 w-5" />
             رجوع
-          </Button>
+          </AudioButton>
         </div>
       </AuthLayout>
     );
@@ -281,19 +305,20 @@ export default function LoginPage() {
             audioSrc="/audio/enter-pin.wav"
             actionLabel="تسجيل الدخول"
           />
-          
-          <Button 
-            variant="ghost" 
-            className="w-full mt-4"
-            onClick={() => setStep("textId")}
+
+          <AudioButton
+            audioSrc="/audio/go-back.wav"
+            onAction={() => setStep("textId")}
+            icon={<ArrowLeftIcon className="ml-2 h-5 w-5" />}
+            className="w-full py-4 text-xl"
+            variant={"outline"}
           >
-            <ArrowLeftIcon className="ml-2 h-5 w-5" />
             رجوع
-          </Button>
+          </AudioButton>
         </div>
       </AuthLayout>
     );
   }
 
-  return null;
+  return;
 }

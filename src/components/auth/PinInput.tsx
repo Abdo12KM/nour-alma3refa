@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { AudioButton } from '@/components/ui/audio-button';
-import { LockIcon, CheckIcon } from 'lucide-react';
-import { useAudioStore } from '@/lib/audio';
+import React, { useState, useRef, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { AudioButton } from "@/components/ui/audio-button";
+import { LockIcon, CheckIcon } from "lucide-react";
+import { useAudioStore } from "@/lib/audio";
 
 interface PinInputProps {
   onComplete: (pin: string) => void;
@@ -15,33 +15,33 @@ interface PinInputProps {
 }
 
 export function PinInput({ onComplete, audioSrc, actionLabel }: PinInputProps) {
-  const [pin, setPin] = useState<string>('');
+  const [pin, setPin] = useState<string>("");
   const [pinVisible, setPinVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { isPlaying } = useAudioStore();
-  
+
   // Focus the input when component mounts
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
-  
+
   const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
+
     // Only allow digits and max 4 characters
     if (/^\d{0,4}$/.test(value)) {
       setPin(value);
     }
   };
-  
+
   const handleSubmit = () => {
     if (pin.length === 4) {
       onComplete(pin);
     }
   };
-  
+
   return (
     <Card className="w-full max-w-lg">
       <CardContent className="p-6 space-y-6">
@@ -50,7 +50,7 @@ export function PinInput({ onComplete, audioSrc, actionLabel }: PinInputProps) {
             <LockIcon className="h-10 w-10 text-primary" />
           </div>
         </div>
-        
+
         <div className="space-y-4">
           <div className="relative">
             <Input
@@ -74,18 +74,18 @@ export function PinInput({ onComplete, audioSrc, actionLabel }: PinInputProps) {
               {pinVisible ? "إخفاء" : "إظهار"}
             </Button>
           </div>
-          
+
           <div className="flex justify-center gap-2 mt-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div 
+              <div
                 key={i}
                 className={`w-6 h-6 rounded-full ${
-                  i < pin.length ? 'bg-primary' : 'bg-gray-200'
+                  i < pin.length ? "bg-primary" : "bg-gray-200"
                 }`}
               />
             ))}
           </div>
-          
+
           <AudioButton
             audioSrc={audioSrc}
             onAction={handleSubmit}
@@ -99,4 +99,4 @@ export function PinInput({ onComplete, audioSrc, actionLabel }: PinInputProps) {
       </CardContent>
     </Card>
   );
-} 
+}

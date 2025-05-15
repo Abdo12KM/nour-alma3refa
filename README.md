@@ -35,7 +35,6 @@ Nour al-Ma'rifa addresses the challenge of foundational illiteracy in Egypt by o
 - **Backend**: Next.js API Routes
 - **Database**: PostgreSQL with Drizzle ORM
 - **AI/ML**: Google Gemini API (Speech-to-Text, Text Generation)
-- **TTS**: EGTTS V0.1 for Egyptian Arabic text-to-speech
 - **Deployment**: Vercel (Frontend/Backend), Neon (Database)
 
 ## Getting Started
@@ -46,8 +45,7 @@ Nour al-Ma'rifa addresses the challenge of foundational illiteracy in Egypt by o
    pnpm install
    ```
 3. Set up environment variables:
-   - Copy `.env.local.example` to `.env.local`
-   - Add your Google API key for Gemini API (see [API_SETUP.md](./API_SETUP.md) for details)
+   - Contact owner for the .env file
 4. Run the development server:
    ```bash
    pnpm dev
@@ -75,6 +73,6 @@ MIT
 
 ## Acknowledgements
 
-- The EGTTS V0.1 model for Egyptian Arabic text-to-speech
+- Google TTS for Egyptian Arabic text-to-speech
 - Google Gemini API for AI capabilities
 - Next.js, Tailwind CSS, and Shadcn UI for development frameworks

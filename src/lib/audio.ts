@@ -1,13 +1,17 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export interface AudioState {
   isPlaying: boolean;
   currentAudio: HTMLAudioElement | null;
   timeoutId: NodeJS.Timeout | null;
   activeButtonId: string | null; // Track which button is currently active
-  
+
   // Actions
-  playSound: (audioPath: string, onAudioEnd: () => void, buttonId?: string) => void;
+  playSound: (
+    audioPath: string,
+    onAudioEnd: () => void,
+    buttonId?: string
+  ) => void;
   stopSound: () => void;
   clearActiveButton: () => void;
 }
@@ -18,52 +22,52 @@ export const useAudioStore = create<AudioState>((set, get) => ({
   timeoutId: null,
   activeButtonId: null,
 
-  playSound: (audioPath, onAudioEnd, buttonId = '') => {
+  playSound: (audioPath, onAudioEnd, buttonId = "") => {
     const { stopSound } = get();
-    
+
     // Clean up previous audio if any
     stopSound();
-    
+
     // Create new audio element
     const audio = new Audio(audioPath);
-    
+
     // Update state first to indicate we're starting playback
     set({
       isPlaying: true,
       currentAudio: audio,
       activeButtonId: buttonId || null, // Set the active button if provided
     });
-      // Play the audio
-    audio.play().catch(error => {
-      console.error('Audio playback failed:', error);
+    // Play the audio
+    audio.play().catch((error) => {
+      console.error("Audio playback failed:", error);
       // Reset isPlaying state on error
       set({ isPlaying: false });
     });
-    
+
     // Handle audio end
-    audio.addEventListener('ended', () => {
+    audio.addEventListener("ended", () => {
       // Update active button ID first (keeping the same button active after audio ends)
-      set({ 
+      set({
         isPlaying: false,
-        activeButtonId: buttonId || null // Maintain the active button ID
+        activeButtonId: buttonId || null, // Maintain the active button ID
       });
-      
+
       // Call the onAudioEnd callback
       if (onAudioEnd) {
         onAudioEnd();
       }
     });
-    
+
     // Add error handler
-    audio.addEventListener('error', () => {
-      console.error('Audio playback error occurred');
+    audio.addEventListener("error", () => {
+      console.error("Audio playback error occurred");
       set({ isPlaying: false });
     });
   },
-  
+
   stopSound: () => {
     const { currentAudio, timeoutId } = get();
-    
+
     // Stop current audio if playing
     if (currentAudio) {
       try {
@@ -73,15 +77,15 @@ export const useAudioStore = create<AudioState>((set, get) => ({
         }
         currentAudio.currentTime = 0;
       } catch (error) {
-        console.warn('Error stopping audio:', error);
+        console.warn("Error stopping audio:", error);
       }
     }
-    
+
     // Clear timeout if exists
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
-    
+
     // Reset state
     set({
       isPlaying: false,
@@ -89,8 +93,8 @@ export const useAudioStore = create<AudioState>((set, get) => ({
       timeoutId: null,
     });
   },
-  
+
   clearActiveButton: () => {
     set({ activeButtonId: null });
-  }
+  },
 }));
