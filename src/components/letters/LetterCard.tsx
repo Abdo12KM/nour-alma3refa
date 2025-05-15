@@ -26,7 +26,7 @@ export function LetterCard({
       className={cn(
         "relative overflow-hidden transition-all duration-300",
         isLocked ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg",
-        isCompleted ? "bg-primary/10" : "bg-card"
+        isCompleted ? "bg-primary/10" : "bg-white"
       )}
     >
       <AudioButton
@@ -34,9 +34,10 @@ export function LetterCard({
         audioSrc={audioSrc}
         onAction={onClick}
         className="w-full h-full p-6 flex flex-col items-center justify-center gap-4"
+        variant="ghost"
       >
-        <span className="text-6xl font-bold text-primary">{letter}</span>
-        <span className="text-xl">{name}</span>
+        <span className="text-6xl font-bold text-black">{letter}</span>
+        <span className="text-xl text-black">{name}</span>
         {isCompleted && (
           <span className="absolute top-2 left-2 text-green-600 text-sm">✓</span>
         )}
