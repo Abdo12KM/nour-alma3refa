@@ -4,7 +4,7 @@ import { z } from "zod";
 
 // Schema to validate the request body
 const loginSchema = z.object({
-  userId: z.number().positive("User ID must be positive"),
+  userId: z.number().positive("رقم بإدخال رقم المستخدم").int("رقم المستخدم يجب أن يكون صحيحًا"),
   pin: z
     .string()
     .length(4, "PIN must be exactly 4 digits")

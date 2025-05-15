@@ -27,8 +27,19 @@ export async function POST(req: NextRequest) {
 
     const { text, type } = validatedData.data;
 
-    // Create a client
-    const client = new textToSpeech.TextToSpeechClient();
+    // Parse credentials from environment variable
+    const credentials = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
+      ? JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON)
+      : null;
+
+    if (!credentials) {
+      throw new Error("Google credentials not found in environment variables");
+    }
+
+    // Create a client with credentials object
+    const client = new textToSpeech.TextToSpeechClient({
+      credentials: credentials,
+    });
 
     // Generate speech
     const [response] = await client.synthesizeSpeech({
@@ -54,9 +65,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error in TTS API:", error);
-    return NextResponse.json(
-      { success: false, error: "Text-to-speech generation failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Text-to-speech generation failed" }, { status: 500 });
   }
 }
