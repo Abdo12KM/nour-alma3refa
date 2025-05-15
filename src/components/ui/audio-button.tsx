@@ -3,6 +3,7 @@ import { Button, ButtonProps } from "@/components/ui/button";
 import { useAudioStore } from "@/lib/audio";
 import { useNavigationStore } from "@/lib/navigation-store";
 import { Volume2Icon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface AudioButtonProps extends ButtonProps {
   audioSrc: string;
@@ -11,6 +12,7 @@ interface AudioButtonProps extends ButtonProps {
   showSoundIcon?: boolean;
   buttonId?: string; // Optional custom ID for the button
   immediateAction?: boolean; // Execute action automatically after audio finishes
+  transparent?: boolean; // New prop to control transparency
 }
 
 export function AudioButton({
@@ -23,6 +25,7 @@ export function AudioButton({
   disabled,
   buttonId,
   immediateAction = false,
+  transparent = false, // Default to false for backwards compatibility
   ...props
 }: AudioButtonProps) {
   const generatedId = useId();
@@ -33,6 +36,7 @@ export function AudioButton({
   const [selfTimeoutId, setSelfTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
+  const [hasPlayed, setHasPlayed] = useState(false);
 
   const isReadyForAction = activeButtonId === uniqueButtonId;
 
@@ -45,47 +49,16 @@ export function AudioButton({
   }, [selfTimeoutId]);
 
   const handleClick = () => {
-    // If two-click mode is disabled, execute action immediately
-    if (!twoClickEnabled) {
+    if (!hasPlayed) {
+      playSound(audioSrc, () => {
+        setHasPlayed(true);
+        if (immediateAction && onAction) {
+          onAction();
+        }
+      });
+    } else if (onAction) {
       onAction();
-      return;
-    }
-
-    // In two-click mode
-    if (isReadyForAction && !isPlaying) {
-      // This is a second click
-      clearActiveButton();
-
-      if (selfTimeoutId) {
-        clearTimeout(selfTimeoutId);
-        setSelfTimeoutId(null);
-      }
-
-      stopSound();
-      onAction();
-    } else if (!isPlaying) {
-      // This is a first click
-      playSound(
-        audioSrc,
-        () => {
-          // After audio finished playing
-
-          if (immediateAction) {
-            // Auto-execute the action if immediateAction is true
-            clearActiveButton();
-            onAction();
-          } else {
-            // Set timeout for the regular two-click flow
-            const timeoutId = setTimeout(() => {
-              clearActiveButton();
-              setSelfTimeoutId(null);
-            }, 30000);
-
-            setSelfTimeoutId(timeoutId);
-          }
-        },
-        uniqueButtonId
-      );
+      setHasPlayed(false);
     }
   };
 
@@ -94,11 +67,10 @@ export function AudioButton({
 
   return (
     <Button
-      className={`${className} transition-all ${
-        isReadyForAction && twoClickEnabled && !immediateAction
-          ? "relative z-10 ring-2 ring-primary shadow-md animate-button-active scale-105"
-          : ""
-      }`}
+      className={cn(
+        transparent ? "bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent outline-none" : "",
+        className
+      )}
       onClick={handleClick}
       disabled={buttonDisabled}
       variant={originalVariant as any}
