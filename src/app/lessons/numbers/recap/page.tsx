@@ -93,6 +93,17 @@ export default function RecapPage() {
 
   // Set up activity when it changes
   useEffect(() => {
+    // Play activity-specific audio prompts
+    if (activity === ACTIVITIES.MATCHING_NUMBERS) {
+      playSound("/audio/match-number-game.wav", () => {});
+    } else if (activity === ACTIVITIES.PICK_NUMBER) {
+      playSound("/audio/choose-correct-number.wav", () => {});
+    } else if (activity === ACTIVITIES.COMPARE_NUMBERS) {
+      playSound(`/audio/choose-${comparisonType}-number.wav`, () => {});
+    } else if (activity === ACTIVITIES.COMPLETION) {
+      playSound("/audio/end-of-lesson.wav", () => {});
+    }
+
     if (activity === ACTIVITIES.MATCHING_NUMBERS) {
       // Select 5 random numbers from 1-10 for the matching game
       const gameNumbers = shuffleArray(numbers).slice(0, 5);
@@ -159,8 +170,8 @@ export default function RecapPage() {
         setShowFeedback(true);
         setScore(score + 10);
 
-        // Play success sound
-        playSound("/audio/welcome-home.wav", () => {});
+        // Play correct answer sound
+        playSound("/audio/correct-answer.wav", () => {});
 
         // Reset selections
         setTimeout(() => {
@@ -187,8 +198,8 @@ export default function RecapPage() {
         setIsCorrect(false);
         setShowFeedback(true);
 
-        // Play error sound
-        playSound("/audio/try-again.wav", () => {});
+        // Play wrong answer sound
+        playSound("/audio/wrong-answer.wav", () => {});
 
         // Reset selections after delay
         setTimeout(() => {

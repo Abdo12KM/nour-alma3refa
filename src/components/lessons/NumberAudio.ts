@@ -9,11 +9,24 @@ export function useNumberAudio() {
   const { playSound } = useAudioStore();
   
   const playNumberSound = useCallback((number: number) => {
-    // This is a placeholder that uses the welcome sound
-    // In a production version, you would use proper audio files like:
-    // `/audio/numbers/number_${number}.wav`
-    const audioPath = `/audio/welcome-home.wav`;
+    // Convert number to word for the audio file name
+    const numberWords = {
+      1: 'one',
+      2: 'two',
+      3: 'three',
+      4: 'four',
+      5: 'five',
+      6: 'six',
+      7: 'seven',
+      8: 'eight',
+      9: 'nine',
+      10: 'ten'
+    };
     
+    const word = numberWords[number];
+    if (!word) return;
+    
+    const audioPath = `/audio/numbers/number-${word}.wav`;
     playSound(audioPath, () => {
       // Callback after audio finishes playing
     });
