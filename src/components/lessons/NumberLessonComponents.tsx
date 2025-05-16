@@ -141,7 +141,7 @@ export function NumberComparison({
         }
       </h3>
       
-      <div className="flex justify-center items-center gap-12">
+      <div className="flex justify-center items-center gap-8">
         <Button
           onClick={() => onSelect("left", correctAnswer === "left")}
           variant="outline"
@@ -150,7 +150,10 @@ export function NumberComparison({
           {leftArabicNumber}
         </Button>
         
-        <div className="text-2xl font-medium">أو</div>
+        <div className="flex flex-col items-center justify-center">
+          <div className="text-2xl font-medium mb-2">أو</div>
+          <div className="h-16 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
+        </div>
         
         <Button
           onClick={() => onSelect("right", correctAnswer === "right")}

@@ -31,17 +31,7 @@ export default function WordsLessonPage() {
         dir="rtl"
         className="flex w-full max-w-5xl flex-col items-center space-y-8 text-center"
       >
-        <h1 className="text-4xl font-bold animate-fadeIn mb-6">تعلم الكلمات</h1>
-        <div className="w-full p-4">
-          <Button
-            onClick={() => router.push("/learn")}
-            className="mb-6 flex items-center"
-            variant="outline"
-          >
-            <ArrowRightIcon className="ml-2 h-5 w-5" />
-            العودة
-          </Button>
-        </div>{" "}
+        
         <div className="text-center p-10 bg-card rounded-lg animate-fadeIn">
           <div className="mb-6 text-7xl font-bold text-primary animate-button-pulse">
             كلمات

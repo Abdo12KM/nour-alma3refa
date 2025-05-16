@@ -7,13 +7,7 @@ import { AudioButton } from "@/components/ui/audio-button";
 import { PinInput } from "@/components/ui/PinInput";
 import { RecordPinStep } from "@/components/auth/RecordPinStep";
 import { RecordUserIdStep } from "@/components/auth/RecordUserIdStep";
-import {
-  UserPlusIcon,
-  LockIcon,
-  MicIcon,
-  KeyboardIcon,
-  ArrowLeftIcon,
-} from "lucide-react";
+import { UserPlusIcon, LockIcon, MicIcon, KeyboardIcon, ArrowLeftIcon } from "lucide-react";
 import { useAuthStore } from "@/lib/auth";
 import { useAudioStore } from "@/lib/audio";
 import { Button } from "@/components/ui/button";
@@ -24,25 +18,18 @@ export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [step, setStep] = useState<
-    "method" | "textId" | "voiceId" | "pin" | "voicePin"
-  >("method");
+  const [step, setStep] = useState<"method" | "textId" | "voiceId" | "pin" | "voicePin">("method");
   const [loginMethod, setLoginMethod] = useState<"text" | "voice">("text");
   const [userId, setUserId] = useState<number | null>(null);
   const { login, isAuthenticated } = useAuthStore();
   const { twoClickEnabled } = useNavigationStore();
   const { stopSound } = useAudioStore();
 
-  // Add console logs for authentication state
   useEffect(() => {
-    console.log(
-      `[Login] Component mounted, isAuthenticated=${isAuthenticated}`
-    );
-
     // Redirect if already authenticated
     if (isAuthenticated) {
-      console.log(`[Login] User already authenticated, redirecting to home`);
-      router.replace("/");
+      console.log(`[Login] User already authenticated, redirecting to learn page`);
+      router.replace("/learn");
     }
 
     // Cleanup audio on component unmount
@@ -114,9 +101,7 @@ export default function LoginPage() {
       console.log(`[Login] Login response:`, data);
 
       if (data.success) {
-        console.log(
-          `[Login] Login successful, calling login(${data.userId}, ${data.name})`
-        );
+        console.log(`[Login] Login successful, calling login(${data.userId}, ${data.name})`);
 
         // Login the user
         login(data.userId, data.name);
@@ -127,9 +112,9 @@ export default function LoginPage() {
           const currentState = useAuthStore.getState();
           console.log(`[Login] Auth state before redirect:`, currentState);
 
-          // Redirect to home page
-          console.log(`[Login] Redirecting to home page`);
-          router.push("/");
+          // Redirect to learn page
+          console.log(`[Login] Redirecting to learn page`);
+          router.push("/learn");
         }, 300);
       } else {
         console.log(`[Login] Login failed: ${data.error || "Unknown error"}`);
@@ -146,12 +131,7 @@ export default function LoginPage() {
   // Method selection screen
   if (step === "method") {
     return (
-      <AuthLayout
-        title="تسجيل الدخول"
-        welcomeAudioSrc={
-          twoClickEnabled ? "/audio/choose-login-method.wav" : undefined
-        }
-      >
+      <AuthLayout title="تسجيل الدخول" welcomeAudioSrc={twoClickEnabled ? "/audio/choose-login-method.wav" : undefined}>
         <div className="space-y-6 text-center">
           <div className="text-xl">اختر طريقة تسجيل الدخول المناسبة لك</div>
 
@@ -193,14 +173,10 @@ export default function LoginPage() {
       <AuthLayout title="إدخال رقم المستخدم">
         <form onSubmit={handleTextIdSubmit} className="space-y-6">
           {errorMessage && (
-            <div className="rounded-md bg-destructive/15 p-3 text-center text-destructive">
-              {errorMessage}
-            </div>
+            <div className="rounded-md bg-destructive/15 p-3 text-center text-destructive">{errorMessage}</div>
           )}
 
-          <div className="text-center text-lg mb-4">
-            أدخل رقم المستخدم الخاص بك
-          </div>
+          <div className="text-center text-lg mb-4">أدخل رقم المستخدم الخاص بك</div>
 
           <div className="space-y-4">
             <Input
@@ -255,21 +231,13 @@ export default function LoginPage() {
     return (
       <AuthLayout title="إدخال الرمز السري صوتياً">
         {errorMessage && (
-          <div className="rounded-md bg-destructive/15 p-3 text-center text-destructive mb-4">
-            {errorMessage}
-          </div>
+          <div className="rounded-md bg-destructive/15 p-3 text-center text-destructive mb-4">{errorMessage}</div>
         )}
 
         <div className="space-y-4">
-          <div className="text-center text-lg mb-4">
-            قم بنطق الرمز السري المكون من 4 أرقام
-          </div>
+          <div className="text-center text-lg mb-4">قم بنطق الرمز السري المكون من 4 أرقام</div>
 
-          <RecordPinStep
-            onComplete={handlePinComplete}
-            audioSrc="/audio/enter-pin.wav"
-            actionLabel="تسجيل الدخول"
-          />
+          <RecordPinStep onComplete={handlePinComplete} audioSrc="/audio/enter-pin.wav" actionLabel="تسجيل الدخول" />
 
           <AudioButton
             audioSrc="/audio/go-back.wav"
@@ -290,21 +258,13 @@ export default function LoginPage() {
     return (
       <AuthLayout title="إدخال الرمز السري">
         {errorMessage && (
-          <div className="rounded-md bg-destructive/15 p-3 text-center text-destructive mb-4">
-            {errorMessage}
-          </div>
+          <div className="rounded-md bg-destructive/15 p-3 text-center text-destructive mb-4">{errorMessage}</div>
         )}
 
         <div className="space-y-4">
-          <div className="text-center text-lg mb-4">
-            أدخل الرمز السري المكون من 4 أرقام
-          </div>
+          <div className="text-center text-lg mb-4">أدخل الرمز السري المكون من 4 أرقام</div>
 
-          <PinInput
-            onComplete={handlePinComplete}
-            audioSrc="/audio/enter-pin.wav"
-            actionLabel="تسجيل الدخول"
-          />
+          <PinInput onComplete={handlePinComplete} audioSrc="/audio/enter-pin.wav" actionLabel="تسجيل الدخول" />
 
           <AudioButton
             audioSrc="/audio/go-back.wav"

@@ -1,9 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
+import { rateLimiter } from "@/lib/rate-limit";
+
+// Set up rate limiter for this API: 10 requests per minute
+const speechToTextRateLimiter = rateLimiter({
+  limit: 10,
+  windowInSeconds: 60,
+});
 
 export async function POST(request: NextRequest) {
   try {
+    // Check rate limit first
+    const rateLimitResult = await speechToTextRateLimiter(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+    
     // Check if Google API key is configured
     if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
       console.error(
@@ -63,24 +76,32 @@ export async function POST(request: NextRequest) {
     let prompt;
     if (action === "name") {
       prompt =
-        "Transcribe this audio of someone saying their name in Arabic. Return ONLY the name, no additional text.";
+        "Transcribe this audio of someone saying their name in Egyptian Arabic. Return ONLY the name itself, with no additional text, interpretations, or punctuation. The person is most likely speaking in Egyptian dialect, so account for any dialect-specific pronunciations. If you hear honorifics like 'doctor' or 'engineer' before the name, do not include them.";
     } else if (action === "userId") {
-      prompt = `Transcribe this audio of someone saying his user id in Arabic. he might say it digit by digit if so then concatenate them and return the whole number. or he might say the whole number in one go. 
-      The person will most probably be Egyptian so take that into account, he might say the numbers in a way that is not standard in Arabic.
-      Examples:
-        - Digit by digit: واحد, اثنان, ثلاثة, ثمانية This should return 1238
-        - Whole number: ثلاثة عشر This should return 13
-        - Whole number: سبعة This should return 7
-        - Whole number: مية واحد وخمسين This should return 151
-        - Whole number: ثلاثة و سبعون This should return 73
-        - Whole number: تلاتة وسبعين This should return 73
-        `;
+      prompt = `Transcribe this audio of someone saying their user ID in Egyptian Arabic. The ID consists only of digits. You must return ONLY the numerical digits.
+
+                Key instructions:
+                - The speaker may say digits individually or as a complete number
+                - The ID is between 1-99999 (1 to 5 digits)
+                - Account for Egyptian dialect pronunciations of numbers
+                - Return ONLY the digits with no Arabic text or explanations
+
+                Common patterns:
+                - Individual digits: "واحد, اثنين, تلاتة, تمنية" → 1238
+                - Complete number: "ثلاثة عشر" → 13
+                - Complete number: "سبعة" → 7
+                - Egyptian dialect: "مية واحد وخمسين" → 151
+                - Mixed dialect: "ثلاثة و سبعين" → 73
+                - Colloquial: "تلاتة وسبعين" → 73
+
+                Return ONLY the numeric digits, nothing else.`;
     } else if (action === "pin") {
       prompt =
-        "Transcribe this audio of someone saying a 4-digit PIN in Arabic. Return ONLY the 4 digits, no additional text.";
+        "Transcribe this audio of someone saying a 4-digit PIN in Egyptian Arabic. The PIN consists of exactly 4 digits. Return ONLY the 4 numeric digits, with no additional text, spaces, or punctuation. The person may say each digit individually (e.g., 'واحد, اثنين, ثلاثة, أربعة' for 1234) or may group them (e.g., 'واحد واربعين' for 41, followed by other digits). Account for Egyptian dialect pronunciations. ALWAYS return exactly 4 digits.";
     } else {
       // Default transcript
-      prompt = "Transcribe this audio in Arabic.";
+      prompt =
+        "Transcribe this audio in Egyptian Arabic. Preserve the exact words spoken, accounting for Egyptian dialect pronunciations and colloquialisms. Return the transcription in Arabic script. Do not translate to Modern Standard Arabic or any other language.";
     }
     try {
       // Log the request details for debugging
@@ -135,7 +156,7 @@ export async function POST(request: NextRequest) {
             {
               error: "Invalid user ID format",
               transcript: responseText,
-              message: "User ID must be a number between 1 and 99999",
+              message: "رقم المستخدم يجب أن يكون بين 1 و 99999",
             },
             { status: 400 }
           );

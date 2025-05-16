@@ -1,11 +1,26 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { rateLimiter } from "@/lib/rate-limit";
 
 // Initialize the Google AI client with proper settings
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+const genAI = new GoogleGenerativeAI(
+  process.env.GOOGLE_GENERATIVE_AI_API_KEY || ""
+);
 
-export async function POST(req: Request) {
+// Set up rate limiter for this API: 15 requests per minute
+const detectLetterRateLimiter = rateLimiter({
+  limit: 15,
+  windowInSeconds: 60,
+});
+
+export async function POST(req: NextRequest) {
   try {
+    // Check rate limit first
+    const rateLimitResult = await detectLetterRateLimiter(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
     const formData = await req.formData();
     const imageFile = formData.get("file") as File;
 
@@ -16,7 +31,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Convert the file to a byte array
     const imageBytes = await imageFile.arrayBuffer();
@@ -53,4 +68,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-} 
+}

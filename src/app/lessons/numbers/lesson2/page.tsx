@@ -6,7 +6,6 @@ import { AudioButton } from "@/components/ui/audio-button";
 import { useAudioStore } from "@/lib/audio";
 import { useAuthStore } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import LessonLayout from "../LessonLayout";
 import {
   NumberCard,
   MatchingCard,
@@ -16,9 +15,12 @@ import {
   WriteUpload,
   Progress,
   toArabicNumber,
-  shuffleArray
+  shuffleArray,
 } from "@/components/lessons/NumberLessonComponents";
-import { useNumberAudio, arabicNumberNames } from "@/components/lessons/NumberAudio";
+import {
+  useNumberAudio,
+  arabicNumberNames,
+} from "@/components/lessons/NumberAudio";
 
 // Lesson steps
 const STEPS = {
@@ -31,7 +33,7 @@ const STEPS = {
   COMPARE_2: "compare_2",
   WRITE_UPLOAD_1: "write_upload_1",
   WRITE_UPLOAD_2: "write_upload_2",
-  COMPLETION: "completion"
+  COMPLETION: "completion",
 };
 
 export default function Lesson2Page() {
@@ -43,36 +45,42 @@ export default function Lesson2Page() {
   const [introPage, setIntroPage] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  
+
   // Matching game states
-  const [selectedNumberIndex, setSelectedNumberIndex] = useState<number | null>(null);
-  const [selectedCircleIndex, setSelectedCircleIndex] = useState<number | null>(null);
+  const [selectedNumberIndex, setSelectedNumberIndex] = useState<number | null>(
+    null
+  );
+  const [selectedCircleIndex, setSelectedCircleIndex] = useState<number | null>(
+    null
+  );
   const [matchedPairs, setMatchedPairs] = useState<number[]>([]);
   const [matchingNumbers, setMatchingNumbers] = useState<number[]>([]);
   const [matchingCircles, setMatchingCircles] = useState<number[]>([]);
-  
+
   // Pick number states
   const [targetNumber, setTargetNumber] = useState(6);
   const [numberOptions, setNumberOptions] = useState<number[]>([]);
-  
+
   // Compare numbers states
   const [leftNumber, setLeftNumber] = useState(6);
   const [rightNumber, setRightNumber] = useState(7);
-  const [comparisonType, setComparisonType] = useState<"bigger" | "smaller">("bigger");
-  
+  const [comparisonType, setComparisonType] = useState<"bigger" | "smaller">(
+    "bigger"
+  );
+
   // Write and upload states
   const [currentWriteNumber, setCurrentWriteNumber] = useState(6);
-  
+
   // Define the numbers for this lesson
   const numbers = [6, 7, 8, 9, 10];
-  
+
   useEffect(() => {
     // Redirect if not authenticated
     if (!isAuthenticated) {
       router.push("/login");
     }
   }, [isAuthenticated, router]);
-  
+
   // Set up initial state when step changes
   useEffect(() => {
     if (step === STEPS.MATCHING_1 || step === STEPS.MATCHING_2) {
@@ -112,13 +120,19 @@ export default function Lesson2Page() {
       do {
         index1 = Math.floor(Math.random() * numbers.length);
         index2 = Math.floor(Math.random() * numbers.length);
-      } while (index2 === index1 || (numbers[index1] === leftNumber && numbers[index2] === rightNumber) || (numbers[index1] === rightNumber && numbers[index2] === leftNumber));
+      } while (
+        index2 === index1 ||
+        (numbers[index1] === leftNumber && numbers[index2] === rightNumber) ||
+        (numbers[index1] === rightNumber && numbers[index2] === leftNumber)
+      );
       setLeftNumber(numbers[index1]);
       setRightNumber(numbers[index2]);
       setComparisonType(comparisonType === "bigger" ? "smaller" : "bigger");
     } else if (step === STEPS.WRITE_UPLOAD_1) {
       // Set up first writing task
-      setCurrentWriteNumber(numbers[Math.floor(Math.random() * numbers.length)]);
+      setCurrentWriteNumber(
+        numbers[Math.floor(Math.random() * numbers.length)]
+      );
     } else if (step === STEPS.WRITE_UPLOAD_2) {
       // Set up second writing task with a different number
       let newNumber;
@@ -128,12 +142,12 @@ export default function Lesson2Page() {
       setCurrentWriteNumber(newNumber);
     }
   }, [step]);
-  
+
   // Skip rendering if not authenticated
   if (!isAuthenticated) {
     return null;
   }
-  
+
   // Get current step and total steps for progress indicator
   const getCurrentStepNumber = () => {
     const stepMap: { [key: string]: number } = {
@@ -146,46 +160,51 @@ export default function Lesson2Page() {
       [STEPS.COMPARE_2]: 7,
       [STEPS.WRITE_UPLOAD_1]: 8,
       [STEPS.WRITE_UPLOAD_2]: 9,
-      [STEPS.COMPLETION]: 10
+      [STEPS.COMPLETION]: 10,
     };
     return stepMap[step] || 1;
   };
-  
+
   // Handle number click in introduction
   const handleNumberClick = (number: number) => {
     // Play sound for the number using our helper
     playNumberSound(number);
   };
-  
+
   // Handle matching game selection
-  const handleMatchingSelection = (type: 'number' | 'circle', index: number) => {
-    if (type === 'number') {
+  const handleMatchingSelection = (
+    type: "number" | "circle",
+    index: number
+  ) => {
+    if (type === "number") {
       setSelectedNumberIndex(index);
     } else {
       setSelectedCircleIndex(index);
     }
-    
+
     // Check if we have a pair selected
-    if ((type === 'number' && selectedCircleIndex !== null) || 
-        (type === 'circle' && selectedNumberIndex !== null)) {
-      const numberIdx = type === 'number' ? index : selectedNumberIndex!;
-      const circleIdx = type === 'circle' ? index : selectedCircleIndex!;
-      
+    if (
+      (type === "number" && selectedCircleIndex !== null) ||
+      (type === "circle" && selectedNumberIndex !== null)
+    ) {
+      const numberIdx = type === "number" ? index : selectedNumberIndex!;
+      const circleIdx = type === "circle" ? index : selectedCircleIndex!;
+
       // Check if they match
       if (matchingNumbers[numberIdx] === matchingCircles[circleIdx]) {
         // Found a match
         setIsCorrect(true);
         setShowFeedback(true);
-        
+
         // Add to matched pairs
-        setMatchedPairs(prev => [...prev, matchingNumbers[numberIdx]]);
-        
+        setMatchedPairs((prev) => [...prev, matchingNumbers[numberIdx]]);
+
         // Reset selected indices
         setTimeout(() => {
           setSelectedNumberIndex(null);
           setSelectedCircleIndex(null);
           setShowFeedback(false);
-            // Check if all are matched
+          // Check if all are matched
           if (matchedPairs.length + 1 === numbers.length) {
             // All matched, move to next step after delay
             setTimeout(() => {
@@ -203,7 +222,7 @@ export default function Lesson2Page() {
         // Not a match
         setIsCorrect(false);
         setShowFeedback(true);
-        
+
         // Reset selected indices after delay
         setTimeout(() => {
           setSelectedNumberIndex(null);
@@ -213,12 +232,12 @@ export default function Lesson2Page() {
       }
     }
   };
-  
+
   // Handle number selection in the pick number step
   const handleNumberSelection = (selected: number, correct: boolean) => {
     setIsCorrect(correct);
     setShowFeedback(true);
-    
+
     if (correct) {
       // Move to next step after delay
       setTimeout(() => {
@@ -236,12 +255,15 @@ export default function Lesson2Page() {
       }, 1500);
     }
   };
-  
+
   // Handle comparison selection
-  const handleComparisonSelection = (selected: "left" | "right", correct: boolean) => {
+  const handleComparisonSelection = (
+    selected: "left" | "right",
+    correct: boolean
+  ) => {
     setIsCorrect(correct);
     setShowFeedback(true);
-    
+
     if (correct) {
       // Move to next step after delay
       setTimeout(() => {
@@ -259,12 +281,12 @@ export default function Lesson2Page() {
       }, 1500);
     }
   };
-  
+
   // Handle upload completion
   const handleUploadComplete = () => {
     setIsCorrect(true);
     setShowFeedback(true);
-    
+
     // Move to next step after delay
     setTimeout(() => {
       setShowFeedback(false);
@@ -275,34 +297,39 @@ export default function Lesson2Page() {
       }
     }, 1500);
   };
-  
+
   // Render current step content
   const renderStepContent = () => {
     // Show feedback overlay if active
     if (showFeedback) {
-      return <Feedback 
-        isCorrect={isCorrect} 
-        onContinue={() => setShowFeedback(false)} 
-      />;
+      return (
+        <Feedback
+          isCorrect={isCorrect}
+          onContinue={() => setShowFeedback(false)}
+        />
+      );
     }
-    
+
     // Otherwise render current step
     switch (step) {
       case STEPS.INTRODUCTION:
-        return (          <div className="text-center" dir="rtl">
-            <h2 className="text-2xl font-bold mb-6 text-foreground">تعرف على الأرقام من ٦ إلى ١٠</h2>
-            
+        return (
+          <div className="text-center" dir="rtl">
+            <h2 className="text-2xl font-bold mb-6 text-foreground">
+              تعرف على الأرقام من ٦ إلى ١٠
+            </h2>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-              {numbers.map(num => (
-                <NumberCard 
-                  key={num} 
-                  number={num} 
-                  arabicNumber={toArabicNumber(num)} 
-                  onNumberClick={handleNumberClick} 
+              {numbers.map((num) => (
+                <NumberCard
+                  key={num}
+                  number={num}
+                  arabicNumber={toArabicNumber(num)}
+                  onNumberClick={handleNumberClick}
                 />
               ))}
             </div>
-            
+
             <div className="flex justify-center mt-10">
               <AudioButton
                 audioSrc="/audio/welcome-home.wav"
@@ -314,13 +341,15 @@ export default function Lesson2Page() {
             </div>
           </div>
         );
-      
+
       case STEPS.MATCHING_1:
       case STEPS.MATCHING_2:
         return (
           <div className="text-center" dir="rtl">
-            <h2 className="text-2xl font-bold mb-6">طابق كل رقم مع عدد النقاط المناسب</h2>
-            
+            <h2 className="text-2xl font-bold mb-6">
+              طابق كل رقم مع عدد النقاط المناسب
+            </h2>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <h3 className="text-xl mb-4">الأرقام</h3>
@@ -330,22 +359,33 @@ export default function Lesson2Page() {
                       key={`num-${index}`}
                       value={toArabicNumber(num)}
                       isSelected={selectedNumberIndex === index}
-                      onClick={() => matchedPairs.includes(num) ? null : handleMatchingSelection('number', index)}
+                      onClick={() =>
+                        matchedPairs.includes(num)
+                          ? null
+                          : handleMatchingSelection("number", index)
+                      }
                       isMatched={matchedPairs.includes(num)}
                     />
                   ))}
                 </div>
               </div>
-                <div className="space-y-2">
+              <div className="space-y-2">
                 <h3 className="text-xl mb-4">النقاط</h3>
                 <div className="grid grid-cols-3 gap-4 justify-items-center">
                   {matchingCircles.map((num, index) => (
-                    <div key={`circle-container-${index}`} className="w-full flex justify-center">
+                    <div
+                      key={`circle-container-${index}`}
+                      className="w-full flex justify-center"
+                    >
                       <MatchingCard
                         key={`circle-${index}`}
                         value={num}
                         isSelected={selectedCircleIndex === index}
-                        onClick={() => matchedPairs.includes(num) ? null : handleMatchingSelection('circle', index)}
+                        onClick={() =>
+                          matchedPairs.includes(num)
+                            ? null
+                            : handleMatchingSelection("circle", index)
+                        }
                         isMatched={matchedPairs.includes(num)}
                         showCircles={true}
                       />
@@ -354,13 +394,13 @@ export default function Lesson2Page() {
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-8 text-primary font-bold">
               {matchedPairs.length} / {numbers.length} مطابقة
             </div>
           </div>
         );
-      
+
       case STEPS.PICK_1:
       case STEPS.PICK_2:
         return (
@@ -368,15 +408,15 @@ export default function Lesson2Page() {
             <NumberSelection
               targetNumber={targetNumber}
               arabicTargetNumber={toArabicNumber(targetNumber)}
-              options={numberOptions.map(num => ({
+              options={numberOptions.map((num) => ({
                 number: num,
-                arabicNumber: toArabicNumber(num)
+                arabicNumber: toArabicNumber(num),
               }))}
               onSelect={handleNumberSelection}
             />
           </div>
         );
-      
+
       case STEPS.COMPARE_1:
       case STEPS.COMPARE_2:
         return (
@@ -391,7 +431,7 @@ export default function Lesson2Page() {
             />
           </div>
         );
-      
+
       case STEPS.WRITE_UPLOAD_1:
       case STEPS.WRITE_UPLOAD_2:
         return (
@@ -403,25 +443,29 @@ export default function Lesson2Page() {
             />
           </div>
         );
-      
+
       case STEPS.COMPLETION:
         return (
           <div className="text-center" dir="rtl">
-            <h2 className="text-3xl font-bold mb-6">أحسنت! لقد أكملت الدرس الثاني</h2>
+            <h2 className="text-3xl font-bold mb-6">
+              أحسنت! لقد أكملت الدرس الثاني
+            </h2>
             <div className="text-6xl mb-8">🎉</div>
             <p className="text-xl mb-8">لقد تعلمت الأرقام من ٦ إلى ١٠</p>
-            
+
             <div className="flex justify-center gap-4">
-              <Button 
-                onClick={() => router.push("/lessons/numbers")} 
-                className="px-8 py-2">
+              <Button
+                onClick={() => router.push("/lessons/numbers")}
+                className="px-8 py-2"
+              >
                 العودة للقائمة
               </Button>
-              
-              <Button 
-                onClick={() => router.push("/lessons/numbers/lesson1")} 
-                variant="outline" 
-                className="px-8 py-2">
+
+              <Button
+                onClick={() => router.push("/lessons/numbers/lesson1")}
+                variant="outline"
+                className="px-8 py-2"
+              >
                 مراجعة الدرس الأول
               </Button>
             </div>
@@ -429,16 +473,11 @@ export default function Lesson2Page() {
         );
     }
   };
-  
+
   return (
-    <LessonLayout title="الأرقام من ٦ إلى ١٠">
-      <div className="p-4 animate-fadeIn">
-        <Progress 
-          currentStep={getCurrentStepNumber()} 
-          totalSteps={10} 
-        />
-        {renderStepContent()}
-      </div>
-    </LessonLayout>
+    <div className="p-4 pt-0 animate-fadeIn">
+      <Progress currentStep={getCurrentStepNumber()} totalSteps={10} />
+      {renderStepContent()}
+    </div>
   );
 }

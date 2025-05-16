@@ -4,7 +4,7 @@ export default function NumbersLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-6">
+    <div className="flex h-full w-full flex-col items-center p-6">
       {children}
     </div>
   );

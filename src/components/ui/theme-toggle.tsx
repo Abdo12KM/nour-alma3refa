@@ -30,6 +30,7 @@ export function ThemeToggle() {
         audioSrc="/audio/dark-mode.wav"
         aria-label="دوس علشان تفعل اللون الغامق"
         title="دوس علشان تفعل اللون الغامق"
+        showSoundIcon={false}
       >
         <MoonIcon className="h-5 w-5" />
       </AudioButton>
@@ -42,18 +43,11 @@ export function ThemeToggle() {
       size="sm"
       onAction={handleToggleTheme}
       audioSrc={isDark ? "/audio/light-mode.wav" : "/audio/dark-mode.wav"}
-      aria-label={
-        isDark ? "دوس علشان تفعل اللون الفاتح" : "دوس علشان تفعل اللون الغامق"
-      }
-      title={
-        isDark ? "دوس علشان تفعل اللون الفاتح" : "دوس علشان تفعل اللون الغامق"
-      }
+      aria-label={isDark ? "دوس علشان تفعل اللون الفاتح" : "دوس علشان تفعل اللون الغامق"}
+      title={isDark ? "دوس علشان تفعل اللون الفاتح" : "دوس علشان تفعل اللون الغامق"}
+      showSoundIcon={false}
     >
-      {isDark ? (
-        <SunIcon className="h-5 w-5" />
-      ) : (
-        <MoonIcon className="h-5 w-5" />
-      )}
+      {isDark ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
     </AudioButton>
   );
 }

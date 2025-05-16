@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, Calculator, RefreshCw, Star } from "lucide-react";
 import { useAudioStore } from "@/lib/audio";
 import { useAuthStore } from "@/lib/auth";
-import LessonLayout from "../LessonLayout";
 import {
   NumberCard,
   MatchingCard,
@@ -17,9 +16,12 @@ import {
   Progress,
   toArabicNumber,
   shuffleArray,
-  CircleDisplay
+  CircleDisplay,
 } from "@/components/lessons/NumberLessonComponents";
-import { useNumberAudio, arabicNumberNames } from "@/components/lessons/NumberAudio";
+import {
+  useNumberAudio,
+  arabicNumberNames,
+} from "@/components/lessons/NumberAudio";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Recap activity types
@@ -30,7 +32,7 @@ const ACTIVITIES = {
   PICK_NUMBER: "pick_number",
   COMPARE_NUMBERS: "compare_numbers",
   RANDOM_CHALLENGE: "random_challenge",
-  COMPLETION: "completion"
+  COMPLETION: "completion",
 };
 
 export default function RecapPage() {
@@ -38,51 +40,57 @@ export default function RecapPage() {
   const { isAuthenticated } = useAuthStore();
   const { playSound } = useAudioStore();
   const { playNumberSound } = useNumberAudio();
-  
+
   // Activity management
   const [activity, setActivity] = useState<string>(ACTIVITIES.OVERVIEW);
   const [completedActivities, setCompletedActivities] = useState<string[]>([]);
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
-  
+
   // Feedback states
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  
+
   // Matching game states
-  const [selectedNumberIndex, setSelectedNumberIndex] = useState<number | null>(null);
-  const [selectedCircleIndex, setSelectedCircleIndex] = useState<number | null>(null);
+  const [selectedNumberIndex, setSelectedNumberIndex] = useState<number | null>(
+    null
+  );
+  const [selectedCircleIndex, setSelectedCircleIndex] = useState<number | null>(
+    null
+  );
   const [matchedPairs, setMatchedPairs] = useState<number[]>([]);
   const [matchingNumbers, setMatchingNumbers] = useState<number[]>([]);
   const [matchingCircles, setMatchingCircles] = useState<number[]>([]);
-  
+
   // Pick number states
   const [targetNumber, setTargetNumber] = useState(1);
   const [numberOptions, setNumberOptions] = useState<number[]>([]);
-  
+
   // Compare numbers states
   const [leftNumber, setLeftNumber] = useState(1);
   const [rightNumber, setRightNumber] = useState(2);
-  const [comparisonType, setComparisonType] = useState<"bigger" | "smaller">("bigger");
-  
+  const [comparisonType, setComparisonType] = useState<"bigger" | "smaller">(
+    "bigger"
+  );
+
   // Random challenge state
   const [challengeType, setChallengeType] = useState<string>("");
-  
+
   // All numbers for this lesson (1-10)
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  
+
   useEffect(() => {
     // Redirect if not authenticated
     if (!isAuthenticated) {
       router.push("/login");
     }
   }, [isAuthenticated, router]);
-  
+
   // Skip rendering if not authenticated
   if (!isAuthenticated) {
     return null;
   }
-  
+
   // Set up activity when it changes
   useEffect(() => {
     if (activity === ACTIVITIES.MATCHING_NUMBERS) {
@@ -112,7 +120,7 @@ export default function RecapPage() {
       do {
         num2 = Math.floor(Math.random() * 10) + 1;
       } while (num2 === num1);
-      
+
       setLeftNumber(num1);
       setRightNumber(num2);
       setComparisonType(Math.random() > 0.5 ? "bigger" : "smaller");
@@ -122,25 +130,27 @@ export default function RecapPage() {
       const challengeTypes = [
         ACTIVITIES.MATCHING_NUMBERS,
         ACTIVITIES.PICK_NUMBER,
-        ACTIVITIES.COMPARE_NUMBERS
+        ACTIVITIES.COMPARE_NUMBERS,
       ];
-      setChallengeType(challengeTypes[Math.floor(Math.random() * challengeTypes.length)]);
+      setChallengeType(
+        challengeTypes[Math.floor(Math.random() * challengeTypes.length)]
+      );
       setStep(0);
     }
   }, [activity]);
-  
+
   // Handle matching game selections
-  const handleMatchSelection = (index: number, type: 'number' | 'circle') => {
-    if (type === 'number') {
+  const handleMatchSelection = (index: number, type: "number" | "circle") => {
+    if (type === "number") {
       setSelectedNumberIndex(index);
     } else {
       setSelectedCircleIndex(index);
     }
-    
+
     // Check if we have a pair selected
-    const numIndex = type === 'number' ? index : selectedNumberIndex;
-    const circIndex = type === 'circle' ? index : selectedCircleIndex;
-    
+    const numIndex = type === "number" ? index : selectedNumberIndex;
+    const circIndex = type === "circle" ? index : selectedCircleIndex;
+
     if (numIndex !== null && circIndex !== null) {
       if (matchingNumbers[numIndex] === matchingCircles[circIndex]) {
         // Correct match!
@@ -148,16 +158,16 @@ export default function RecapPage() {
         setIsCorrect(true);
         setShowFeedback(true);
         setScore(score + 10);
-        
+
         // Play success sound
         playSound("/audio/welcome-home.wav", () => {});
-        
+
         // Reset selections
         setTimeout(() => {
           setSelectedNumberIndex(null);
           setSelectedCircleIndex(null);
           setShowFeedback(false);
-          
+
           // Check if all pairs are matched
           if (matchedPairs.length + 1 === matchingNumbers.length) {
             // All pairs matched, move to next activity
@@ -166,7 +176,7 @@ export default function RecapPage() {
               newCompleted.push(ACTIVITIES.MATCHING_NUMBERS);
             }
             setCompletedActivities(newCompleted);
-            
+
             setTimeout(() => {
               setActivity(ACTIVITIES.OVERVIEW);
             }, 1000);
@@ -176,10 +186,10 @@ export default function RecapPage() {
         // Wrong match
         setIsCorrect(false);
         setShowFeedback(true);
-        
+
         // Play error sound
         playSound("/audio/try-again.wav", () => {});
-        
+
         // Reset selections after delay
         setTimeout(() => {
           setSelectedNumberIndex(null);
@@ -189,34 +199,34 @@ export default function RecapPage() {
       }
     }
   };
-  
+
   // Handle number selection in pick number activity
   const handleNumberSelection = (number: number, correct: boolean) => {
     setIsCorrect(correct);
     setShowFeedback(true);
-    
+
     if (correct) {
       setScore(score + 10);
-      
+
       setTimeout(() => {
         setShowFeedback(false);
-        
+
         if (step < 2) {
           // Generate a new target number different from the current one
           let newTarget;
           do {
             newTarget = Math.floor(Math.random() * 10) + 1;
           } while (newTarget === targetNumber);
-          
+
           setTargetNumber(newTarget);
-          
+
           // Create new options
           const allOptions = shuffleArray(numbers).slice(0, 6);
           if (!allOptions.includes(newTarget)) {
             allOptions[0] = newTarget;
           }
           setNumberOptions(shuffleArray(allOptions));
-          
+
           setStep(step + 1);
         } else {
           // Complete the activity
@@ -225,7 +235,7 @@ export default function RecapPage() {
             newCompleted.push(ACTIVITIES.PICK_NUMBER);
           }
           setCompletedActivities(newCompleted);
-          
+
           setTimeout(() => {
             setActivity(ACTIVITIES.OVERVIEW);
           }, 1000);
@@ -237,18 +247,21 @@ export default function RecapPage() {
       }, 1500);
     }
   };
-  
+
   // Handle comparison selection
-  const handleComparisonSelection = (selected: "left" | "right", correct: boolean) => {
+  const handleComparisonSelection = (
+    selected: "left" | "right",
+    correct: boolean
+  ) => {
     setIsCorrect(correct);
     setShowFeedback(true);
-    
+
     if (correct) {
       setScore(score + 10);
-      
+
       setTimeout(() => {
         setShowFeedback(false);
-        
+
         if (step < 2) {
           // Set up new comparison
           let num1 = Math.floor(Math.random() * 10) + 1;
@@ -256,11 +269,11 @@ export default function RecapPage() {
           do {
             num2 = Math.floor(Math.random() * 10) + 1;
           } while (num2 === num1);
-          
+
           setLeftNumber(num1);
           setRightNumber(num2);
           setComparisonType(Math.random() > 0.5 ? "bigger" : "smaller");
-          
+
           setStep(step + 1);
         } else {
           // Complete the activity
@@ -269,7 +282,7 @@ export default function RecapPage() {
             newCompleted.push(ACTIVITIES.COMPARE_NUMBERS);
           }
           setCompletedActivities(newCompleted);
-          
+
           setTimeout(() => {
             setActivity(ACTIVITIES.OVERVIEW);
           }, 1000);
@@ -281,37 +294,39 @@ export default function RecapPage() {
       }, 1500);
     }
   };
-  
+
   // Reset score and start over
   const handleReset = () => {
     setScore(0);
     setCompletedActivities([]);
     setActivity(ACTIVITIES.OVERVIEW);
   };
-  
+
   // Determine if all activities are completed
-  const allCompleted = 
+  const allCompleted =
     completedActivities.includes(ACTIVITIES.MATCHING_NUMBERS) &&
     completedActivities.includes(ACTIVITIES.PICK_NUMBER) &&
     completedActivities.includes(ACTIVITIES.COMPARE_NUMBERS);
-  
+
   // Handle number card clicks in the overview
   const handleNumberCardClick = (number: number) => {
     playNumberSound(number);
   };
-  
+
   // Render activity content based on current activity
   const renderActivity = () => {
-    switch(activity) {
+    switch (activity) {
       case ACTIVITIES.OVERVIEW:
         return (
           <div className="animate-fadeIn">
-            <h2 className="text-3xl font-bold mb-6 text-foreground">مراجعة الأرقام من ١ إلى ١٠</h2>
-            
+            <h2 className="text-3xl font-bold mb-6 text-foreground">
+              مراجعة الأرقام من ١ إلى ١٠
+            </h2>
+
             {allCompleted ? (
               <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/20 rounded-lg">
                 <h3 className="text-xl font-bold flex items-center gap-2 justify-center">
-                  <Star className="h-6 w-6 text-yellow-500 animate-pulse" /> 
+                  <Star className="h-6 w-6 text-yellow-500 animate-pulse" />
                   أحسنت! لقد أكملت جميع الأنشطة
                 </h3>
                 <p className="mt-2">مجموع النقاط: {score}</p>
@@ -319,10 +334,10 @@ export default function RecapPage() {
             ) : (
               <p className="text-xl mb-4">اختر نشاطًا للمراجعة</p>
             )}
-            
+
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 my-8">
               {numbers.map((num) => (
-                <NumberCard 
+                <NumberCard
                   key={num}
                   number={num}
                   arabicNumber={toArabicNumber(num)}
@@ -330,36 +345,54 @@ export default function RecapPage() {
                 />
               ))}
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
               <Button
                 onClick={() => setActivity(ACTIVITIES.MATCHING_NUMBERS)}
                 className="p-6 text-lg h-auto flex flex-col gap-2"
-                variant={completedActivities.includes(ACTIVITIES.MATCHING_NUMBERS) ? "outline" : "default"}
+                variant={
+                  completedActivities.includes(ACTIVITIES.MATCHING_NUMBERS)
+                    ? "outline"
+                    : "default"
+                }
               >
                 <span className="text-xl">مطابقة الأرقام</span>
-                <span className="text-sm opacity-70">اختبر قدرتك على مطابقة الأرقام بالنقاط</span>
+                <span className="text-sm opacity-70">
+                  اختبر قدرتك على مطابقة الأرقام بالنقاط
+                </span>
               </Button>
-              
+
               <Button
                 onClick={() => setActivity(ACTIVITIES.PICK_NUMBER)}
                 className="p-6 text-lg h-auto flex flex-col gap-2"
-                variant={completedActivities.includes(ACTIVITIES.PICK_NUMBER) ? "outline" : "default"}
+                variant={
+                  completedActivities.includes(ACTIVITIES.PICK_NUMBER)
+                    ? "outline"
+                    : "default"
+                }
               >
                 <span className="text-xl">تحديد الأرقام</span>
-                <span className="text-sm opacity-70">اختر الرقم الصحيح من بين عدة خيارات</span>
+                <span className="text-sm opacity-70">
+                  اختر الرقم الصحيح من بين عدة خيارات
+                </span>
               </Button>
-              
+
               <Button
                 onClick={() => setActivity(ACTIVITIES.COMPARE_NUMBERS)}
                 className="p-6 text-lg h-auto flex flex-col gap-2"
-                variant={completedActivities.includes(ACTIVITIES.COMPARE_NUMBERS) ? "outline" : "default"}
+                variant={
+                  completedActivities.includes(ACTIVITIES.COMPARE_NUMBERS)
+                    ? "outline"
+                    : "default"
+                }
               >
                 <span className="text-xl">مقارنة الأرقام</span>
-                <span className="text-sm opacity-70">حدد الرقم الأكبر أو الأصغر</span>
+                <span className="text-sm opacity-70">
+                  حدد الرقم الأكبر أو الأصغر
+                </span>
               </Button>
             </div>
-            
+
             <div className="flex justify-center gap-4 mt-8">
               {allCompleted && (
                 <Button
@@ -370,7 +403,7 @@ export default function RecapPage() {
                   <RefreshCw className="h-5 w-5" /> إعادة المحاولة
                 </Button>
               )}
-              
+
               <Button
                 onClick={() => router.push("/lessons/numbers")}
                 variant="ghost"
@@ -381,20 +414,25 @@ export default function RecapPage() {
             </div>
           </div>
         );
-        
+
       case ACTIVITIES.MATCHING_NUMBERS:
         return (
           <div className="animate-fadeIn">
             <h2 className="text-3xl font-bold mb-6">مطابقة الأرقام بالنقاط</h2>
-            
+
             {showFeedback ? (
-              <Feedback isCorrect={isCorrect} onContinue={() => setShowFeedback(false)} />
+              <Feedback
+                isCorrect={isCorrect}
+                onContinue={() => setShowFeedback(false)}
+              />
             ) : (
               <div>
                 <div className="mb-4 text-center">
-                  <p className="mb-4 text-xl">اختر الرقم الذي يُطابق عدد النقاط</p>
+                  <p className="mb-4 text-xl">
+                    اختر الرقم الذي يُطابق عدد النقاط
+                  </p>
                 </div>
-                
+
                 <div className="grid grid-cols-1 gap-8">
                   <div className="grid grid-cols-5 gap-2 justify-center mb-4">
                     {matchingNumbers.map((num, index) => (
@@ -407,7 +445,7 @@ export default function RecapPage() {
                           isSelected={selectedNumberIndex === index}
                           onClick={() => {
                             if (!matchedPairs.includes(num)) {
-                              handleMatchSelection(index, 'number');
+                              handleMatchSelection(index, "number");
                             }
                           }}
                           isMatched={matchedPairs.includes(num)}
@@ -415,7 +453,7 @@ export default function RecapPage() {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="grid grid-cols-5 gap-2 justify-center">
                     {matchingCircles.map((num, index) => (
                       <div
@@ -427,7 +465,7 @@ export default function RecapPage() {
                           isSelected={selectedCircleIndex === index}
                           onClick={() => {
                             if (!matchedPairs.includes(num)) {
-                              handleMatchSelection(index, 'circle');
+                              handleMatchSelection(index, "circle");
                             }
                           }}
                           isMatched={matchedPairs.includes(num)}
@@ -439,57 +477,63 @@ export default function RecapPage() {
                 </div>
               </div>
             )}
-            
-            <Button 
+
+            <Button
               onClick={() => setActivity(ACTIVITIES.OVERVIEW)}
-              variant="ghost" 
+              variant="ghost"
               className="mt-6"
             >
               العودة للقائمة الرئيسية
             </Button>
           </div>
         );
-        
+
       case ACTIVITIES.PICK_NUMBER:
         return (
           <div className="animate-fadeIn">
             <h2 className="text-3xl font-bold mb-6">تحديد الأرقام</h2>
-            
+
             <Progress currentStep={step + 1} totalSteps={3} />
-            
+
             {showFeedback ? (
-              <Feedback isCorrect={isCorrect} onContinue={() => setShowFeedback(false)} />
+              <Feedback
+                isCorrect={isCorrect}
+                onContinue={() => setShowFeedback(false)}
+              />
             ) : (
               <NumberSelection
                 targetNumber={targetNumber}
                 arabicTargetNumber={toArabicNumber(targetNumber)}
                 options={numberOptions.map((num) => ({
                   number: num,
-                  arabicNumber: toArabicNumber(num)
+                  arabicNumber: toArabicNumber(num),
                 }))}
                 onSelect={handleNumberSelection}
               />
             )}
-            
-            <Button 
+
+            <Button
               onClick={() => setActivity(ACTIVITIES.OVERVIEW)}
-              variant="ghost" 
+              variant="ghost"
               className="mt-6"
             >
               العودة للقائمة الرئيسية
             </Button>
           </div>
         );
-        
+
       case ACTIVITIES.COMPARE_NUMBERS:
         return (
           <div className="animate-fadeIn">
             <h2 className="text-3xl font-bold mb-6">مقارنة الأرقام</h2>
-            
+
             <Progress currentStep={step + 1} totalSteps={3} />
-            
+
             {showFeedback ? (
-              <Feedback isCorrect={isCorrect} onContinue={() => setShowFeedback(false)} />
+              <Feedback
+                isCorrect={isCorrect}
+                onContinue={() => setShowFeedback(false)}
+              />
             ) : (
               <NumberComparison
                 leftNumber={leftNumber}
@@ -500,33 +544,31 @@ export default function RecapPage() {
                 onSelect={handleComparisonSelection}
               />
             )}
-            
-            <Button 
+
+            <Button
               onClick={() => setActivity(ACTIVITIES.OVERVIEW)}
-              variant="ghost" 
+              variant="ghost"
               className="mt-6"
             >
               العودة للقائمة الرئيسية
             </Button>
           </div>
         );
-        
+
       default:
         return null;
     }
   };
-  
+
   return (
-    <LessonLayout title="المراجعة">
-      <div className="p-4 animate-fadeIn text-center" dir="rtl">
-        <div className="mb-10 text-6xl font-bold text-primary animate-button-pulse">
-          مراجعة الأرقام
-        </div>
-        
-        <div className="bg-card border-2 border-primary/20 p-8 rounded-xl mb-8">
-          {renderActivity()}
-        </div>
+    <div className="p-4 animate-fadeIn text-center" dir="rtl">
+      <div className="mb-10 text-6xl font-bold text-primary animate-button-pulse">
+        مراجعة الأرقام
       </div>
-    </LessonLayout>
+
+      <div className="bg-card border-2 border-primary/20 p-8 rounded-xl mb-8">
+        {renderActivity()}
+      </div>
+    </div>
   );
 }

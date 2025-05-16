@@ -17,7 +17,9 @@ export function MicrophoneButton({
   children,
 }: MicrophoneButtonProps) {
   const [isRecording, setIsRecording] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
+    null
+  );
   const { playSound } = useAudioStore();
 
   const startRecording = async () => {
@@ -35,7 +37,7 @@ export function MicrophoneButton({
       recorder.onstop = () => {
         const blob = new Blob(chunks, { type: "audio/webm" });
         onRecordingComplete(blob);
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       };
 
       setMediaRecorder(recorder);
@@ -74,10 +76,10 @@ export function MicrophoneButton({
         </>
       ) : (
         <>
-          <Mic className="w-6 h-6 ml-2" />
           {children || "ابدأ التسجيل"}
+          <Mic className="w-6 h-6 ml-2" />
         </>
       )}
     </Button>
   );
-} 
+}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as textToSpeech from "@google-cloud/text-to-speech";
 import { z } from "zod";
+import { rateLimiter } from "@/lib/rate-limit";
 
 // Schema to validate the request body
 const ttsSchema = z.object({
@@ -8,8 +9,20 @@ const ttsSchema = z.object({
   type: z.enum(["name", "pin", "general"]).default("general"),
 });
 
+// Set up rate limiter for this API: 20 requests per minute
+const textToSpeechRateLimiter = rateLimiter({
+  limit: 20,
+  windowInSeconds: 60,
+});
+
 export async function POST(req: NextRequest) {
   try {
+    // Check rate limit first
+    const rateLimitResult = await textToSpeechRateLimiter(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
     // Parse and validate the request body
     const body = await req.json();
     const validatedData = ttsSchema.safeParse(body);
@@ -27,8 +40,19 @@ export async function POST(req: NextRequest) {
 
     const { text, type } = validatedData.data;
 
-    // Create a client
-    const client = new textToSpeech.TextToSpeechClient();
+    // Parse credentials from environment variable
+    const credentials = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
+      ? JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON)
+      : null;
+
+    if (!credentials) {
+      throw new Error("Google credentials not found in environment variables");
+    }
+
+    // Create a client with credentials object
+    const client = new textToSpeech.TextToSpeechClient({
+      credentials: credentials,
+    });
 
     // Generate speech
     const [response] = await client.synthesizeSpeech({
@@ -54,9 +78,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error in TTS API:", error);
-    return NextResponse.json(
-      { success: false, error: "Text-to-speech generation failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Text-to-speech generation failed" }, { status: 500 });
   }
 }

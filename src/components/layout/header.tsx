@@ -35,7 +35,7 @@ export function Header() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <div className="md:flex items-center gap-3 hidden">
+          <div className="flex items-center gap-3 ">
             <ThemeToggle />
             <NavigationToggle />
           </div>
@@ -44,45 +44,26 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
-                  <UserIcon className="ml-2 h-4 w-4" />
+                  <UserIcon className="me-2 h-4 w-4" />
                   الحساب
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => router.push("/learn")}>
-                  <BookOpenIcon className="ml-2 h-4 w-4" />
+                <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
+                  <UserIcon className="me-2 h-4 w-4" />
+                  الملف الشخصي
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/learn")}>
+                  <BookOpenIcon className="me-2 h-4 w-4" />
                   الدروس
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="text-destructive"
-                >
-                  <LogOutIcon className="ml-2 h-4 w-4" />
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
+                  <LogOutIcon className="me-2 h-4 w-4" />
                   تسجيل الخروج
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-
-          <div className="md:hidden flex items-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  ≡
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <div className="p-2">
-                  <div className="mb-2">
-                    <ThemeToggle />
-                  </div>
-                  <div>
-                    <NavigationToggle />
-                  </div>
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
         </div>
       </div>
     </header>

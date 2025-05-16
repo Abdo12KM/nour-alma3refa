@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAudioStore } from "@/lib/audio";
 import { cn } from "@/lib/utils";
@@ -26,11 +25,11 @@ export function LetterSearchExercise({
   // Generate a random set of letters including the target letter
   const letters = useState(() => {
     const allLetters = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split("");
-    const filteredLetters = allLetters.filter(l => l !== targetLetter);
+    const filteredLetters = allLetters.filter((l) => l !== targetLetter);
     const randomLetters = [...filteredLetters]
       .sort(() => Math.random() - 0.5)
       .slice(0, 8);
-    
+
     // Insert the target letter at a random position
     const position = Math.floor(Math.random() * 9);
     randomLetters.splice(position, 0, targetLetter);
@@ -39,7 +38,7 @@ export function LetterSearchExercise({
 
   const handleLetterClick = async (letter: string) => {
     setSelectedLetter(letter);
-    
+
     if (letter === targetLetter) {
       await playSound(audioFiles.correct, () => {
         onSuccess();
@@ -54,7 +53,7 @@ export function LetterSearchExercise({
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-center mb-8">
-        دور على حرف {targetLetter} ودوس عليه
+        دور على الحرف المطلوب ودوس عليه
       </h2>
       <div className="grid grid-cols-3 gap-4">
         {letters.map((letter, index) => (
@@ -63,11 +62,10 @@ export function LetterSearchExercise({
             onClick={() => handleLetterClick(letter)}
             className={cn(
               "h-24 text-4xl font-bold",
-              selectedLetter === letter && (
-                letter === targetLetter
+              selectedLetter === letter &&
+                (letter === targetLetter
                   ? "bg-green-500 hover:bg-green-600"
-                  : "bg-red-500 hover:bg-red-600"
-              )
+                  : "bg-red-500 hover:bg-red-600")
             )}
             variant="outline"
           >
@@ -77,4 +75,4 @@ export function LetterSearchExercise({
       </div>
     </div>
   );
-} 
+}

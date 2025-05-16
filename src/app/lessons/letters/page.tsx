@@ -9,11 +9,11 @@ import { LetterCard } from "@/components/letters/LetterCard";
 
 // Arabic letters in correct order
 const AVAILABLE_LETTERS = [
-  { letter: "أ", name: "الألف", audioSrc: "/audio/letters/alef/letter-name.wav" },
-  { letter: "ب", name: "الباء", audioSrc: "/audio/letters/ba/letter-name.wav" },
-  { letter: "ت", name: "التاء", audioSrc: "/audio/letters/ta/letter-name.wav" },
-  { letter: "ث", name: "الثاء", audioSrc: "/audio/letters/tha/letter-name.wav" },
-  { letter: "ج", name: "الجيم", audioSrc: "/audio/letters/jeem/letter-name.wav" },
+  { letter: "أ", name: "الألف", audioSrc: "/audio/letters/alef/basic/letter-name.wav" },
+  { letter: "ب", name: "الباء", audioSrc: "/audio/letters/ba/basic/letter-name.wav" },
+  { letter: "ت", name: "التاء", audioSrc: "/audio/letters/ta/basic/letter-name.wav" },
+  { letter: "ث", name: "الثاء", audioSrc: "/audio/letters/tha/basic/letter-name.wav" },
+  { letter: "ج", name: "الجيم", audioSrc: "/audio/letters/jeem/basic/letter-name.wav" },
 ].sort((a, b) => {
   const arabicOrder = "أبتثج";
   return arabicOrder.indexOf(a.letter) - arabicOrder.indexOf(b.letter);

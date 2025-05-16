@@ -28,6 +28,7 @@ export function NavigationToggle() {
           ? "دوس علشان تفعل وضع النقر المفرد"
           : "دوس علشان تفعل وضع النقر المزدوج"
       }
+      showSoundIcon={false}
     >
       {twoClickEnabled ? (
         <MousePointerIcon className="h-5 w-5" />

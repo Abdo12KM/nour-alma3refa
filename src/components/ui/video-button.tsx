@@ -8,9 +8,10 @@ import { PlayCircleIcon } from "lucide-react";
 interface VideoButtonProps {
   className?: string;
   audioSrc: string;
+  size?: "default" | "sm" | "lg";
 }
 
-export function VideoButton({ className, audioSrc }: VideoButtonProps) {
+export function VideoButton({ className, audioSrc, size = "default" }: VideoButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isReadyForAction, setIsReadyForAction] = useState(false);
@@ -31,10 +32,10 @@ export function VideoButton({ className, audioSrc }: VideoButtonProps) {
 
   // Preload video when component mounts
   useEffect(() => {
-    const video = document.createElement('video');
-    video.preload = 'auto';
-    video.src = '/videos/how-to-learn.mp4';
-    
+    const video = document.createElement("video");
+    video.preload = "auto";
+    video.src = "/videos/how-to-learn.mp4";
+
     video.onloadeddata = () => {
       setIsVideoLoaded(true);
     };
@@ -44,7 +45,7 @@ export function VideoButton({ className, audioSrc }: VideoButtonProps) {
 
     return () => {
       // Cleanup
-      video.src = '';
+      video.src = "";
       videoRef.current = null;
     };
   }, []);
@@ -52,9 +53,10 @@ export function VideoButton({ className, audioSrc }: VideoButtonProps) {
   const handleAudioEnd = () => {
     setIsAudioPlaying(false);
     setIsReadyForAction(true);
+    // Only pulse for 5 seconds
     timeoutRef.current = setTimeout(() => {
       setIsReadyForAction(false);
-    }, 30000); // Reset after 30 seconds
+    }, 5000);
   };
 
   const handleClick = () => {
@@ -78,30 +80,28 @@ export function VideoButton({ className, audioSrc }: VideoButtonProps) {
 
   return (
     <>
-      <audio
-        ref={audioRef}
-        src={audioSrc}
-        onEnded={handleAudioEnd}
-        onPlay={() => setIsAudioPlaying(true)}
-      />
+      <audio ref={audioRef} src={audioSrc} onEnded={handleAudioEnd} onPlay={() => setIsAudioPlaying(true)} />
       <Button
-        variant="secondary"
+        variant="outline"
+        size={size}
         className={`
           ${className}
-          !inline-flex !items-center !justify-center !gap-2 
-          !px-6 !py-2.5 !text-base !font-semibold
-          hover:scale-105 transition-all duration-300
+          inline-flex items-center justify-center
+          px-10 py-6
+          border border-primary/50
+          bg-secondary hover:bg-primary/20
+          text-primary
+          shadow-lg hover:shadow-xl
+          transition-all duration-300
+          hover:scale-105
           ${showInitialAnimation ? "attention-animation" : ""}
-          ${isReadyForAction ? "animate-pulse" : ""}
-          !border-2 !border-primary 
-          !bg-background hover:!bg-primary/10
-          !text-foreground
+          ${isReadyForAction ? "soft-pulse" : ""}
         `}
         onClick={handleClick}
         disabled={isAudioPlaying}
       >
-        <PlayCircleIcon className="ml-2 h-5 w-5 shrink-0 !text-primary" />
-        <span className="!block !text-foreground">اتعلم تتعلم ازاي</span>
+        <span className="block">اتعلم تتعلم ازاي</span>
+        <PlayCircleIcon className="mr-2 h-5 w-5 shrink-0 text-primary" />
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -114,7 +114,7 @@ export function VideoButton({ className, audioSrc }: VideoButtonProps) {
             )}
             <video
               ref={videoRef}
-              className={`w-full h-full rounded-lg ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`w-full h-full rounded-lg ${isVideoLoaded ? "opacity-100" : "opacity-0"}`}
               controls
               autoPlay
               preload="auto"
@@ -129,9 +129,13 @@ export function VideoButton({ className, audioSrc }: VideoButtonProps) {
 
       <style jsx global>{`
         .attention-animation {
-          animation: attention 1s ease-in-out infinite;
+          animation: attention 1.5s ease-in-out infinite;
         }
-        
+
+        .soft-pulse {
+          animation: softPulse 2s ease-in-out 1;
+        }
+
         @keyframes attention {
           0% {
             transform: scale(1);
@@ -139,14 +143,27 @@ export function VideoButton({ className, audioSrc }: VideoButtonProps) {
           }
           50% {
             transform: scale(1.03);
-            box-shadow: 0 0 0 10px rgba(var(--primary), 0);
+            box-shadow: 0 0 0 8px rgba(var(--primary), 0);
           }
           100% {
             transform: scale(1);
             box-shadow: 0 0 0 0 rgba(var(--primary), 0);
           }
         }
+
+        @keyframes softPulse {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(var(--primary), 0.5);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
       `}</style>
     </>
   );
-} 
+}

@@ -2,8 +2,18 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Define paths that require authentication and paths that are for non-authenticated users
-const authenticatedPaths = ["/lessons", "/progress", "/learn"];
-const authPaths = ["/login", "/register"];
+const authenticatedPaths = [
+  "/lessons", 
+  "/progress", 
+  "/learn",
+  "/api/users",
+  "/api/text-to-speech",
+  "/api/speech-to-text",
+  "/api/detect-letter"
+];
+
+// Public endpoints that don't require authentication
+const publicPaths = ["/login", "/register", "/api/auth"];
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
@@ -22,8 +32,8 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Determine if the current path is an auth path (login/register)
-  const isAuthPath = authPaths.some((path) => pathname.startsWith(path));
+  // Determine if the current path is a public path (login/register/auth)
+  const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
 
   // Determine if the current path requires authentication
   const requiresAuth = authenticatedPaths.some((path) =>
@@ -31,12 +41,23 @@ export function middleware(request: NextRequest) {
   );
 
   // 1. User is authenticated but trying to access login/register pages
-  if (isAuthenticated && isAuthPath) {
+  if (isAuthenticated && isPublicPath && !pathname.startsWith("/api/auth")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
   // 2. User is NOT authenticated and trying to access protected routes
   if (!isAuthenticated && requiresAuth) {
+    // For API routes, return a JSON error instead of redirecting
+    if (pathname.startsWith("/api/")) {
+      return new NextResponse(
+        JSON.stringify({ error: "Authentication required" }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+    // For UI routes, redirect to login
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -52,5 +73,10 @@ export const config = {
     "/lessons/:path*",
     "/progress/:path*",
     "/learn",
+    "/api/users/:path*",
+    "/api/text-to-speech",
+    "/api/speech-to-text",
+    "/api/detect-letter",
+    "/api/profile-audio",
   ],
 };
