@@ -30,12 +30,9 @@ export function AudioButton({
 }: AudioButtonProps) {
   const generatedId = useId();
   const uniqueButtonId = buttonId || generatedId;
-  const { playSound, isPlaying, stopSound, activeButtonId, clearActiveButton } =
-    useAudioStore();
+  const { playSound, isPlaying, stopSound, activeButtonId, clearActiveButton } = useAudioStore();
   const { twoClickEnabled } = useNavigationStore();
-  const [selfTimeoutId, setSelfTimeoutId] = useState<NodeJS.Timeout | null>(
-    null
-  );
+  const [selfTimeoutId, setSelfTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [hasPlayed, setHasPlayed] = useState(false);
 
   const isReadyForAction = activeButtonId === uniqueButtonId;
@@ -49,25 +46,42 @@ export function AudioButton({
   }, [selfTimeoutId]);
 
   const handleClick = () => {
-    // If single click mode is enabled (twoClickEnabled is false) or immediateAction is true,
-    // execute the action immediately without playing audio
-    if (!twoClickEnabled || immediateAction) {
+    if (!twoClickEnabled) {
+      // Single-click mode: execute action immediately without playing audio.
       onAction();
       return;
     }
 
-    // Two-click mode behavior
-    if (!hasPlayed) {
+    // Two-click mode is enabled
+    if (immediateAction) {
+      // If immediateAction is true, play sound and then execute the action
+      // when the sound finishes.
       playSound(
         audioSrc,
         () => {
-          setHasPlayed(true);
+          // This callback is executed when the audio finishes playing.
+          onAction();
+          // Reset hasPlayed state as immediateAction completes the action in one step after audio.
+          setHasPlayed(false);
         },
         uniqueButtonId
       );
-    } else if (onAction) {
-      onAction();
-      setHasPlayed(false);
+    } else {
+      // Standard two-click mode behavior (immediateAction is false)
+      if (!hasPlayed) {
+        // First click: play sound and set hasPlayed to true upon completion.
+        playSound(
+          audioSrc,
+          () => {
+            setHasPlayed(true);
+          },
+          uniqueButtonId
+        );
+      } else {
+        // Second click: execute action and reset hasPlayed.
+        onAction();
+        setHasPlayed(false);
+      }
     }
   };
 
@@ -90,13 +104,9 @@ export function AudioButton({
     >
       {icon}
       {children}
-      {showSoundIcon &&
-        isReadyForAction &&
-        twoClickEnabled &&
-        !isPlaying &&
-        !immediateAction && (
-          <Volume2Icon className="ml-2 h-5 w-5 animate-pulse text-secondary dark:text-blue-500" />
-        )}
+      {showSoundIcon && isReadyForAction && twoClickEnabled && !isPlaying && !immediateAction && (
+        <Volume2Icon className="ml-2 h-5 w-5 animate-pulse text-secondary dark:text-blue-500" />
+      )}
     </Button>
   );
 }
