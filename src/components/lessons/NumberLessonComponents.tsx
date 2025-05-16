@@ -176,15 +176,6 @@ interface FeedbackProps {
 export function Feedback({ isCorrect, onContinue }: FeedbackProps) {
   const { playSound } = useAudioStore();
   
-  useEffect(() => {
-    // Play appropriate sound feedback
-    if (isCorrect) {
-      playSound("/audio/welcome-home.wav", () => {});
-    } else {
-      playSound("/audio/try-again.wav", () => {});
-    }
-  }, [isCorrect, playSound]);
-  
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.8 }}

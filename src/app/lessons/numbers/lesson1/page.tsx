@@ -83,6 +83,23 @@ export default function Lesson1Page() {
 
   // Set up initial state when step changes
   useEffect(() => {
+    // Play step-specific audio prompts
+    if (step === STEPS.MATCHING_1 || step === STEPS.MATCHING_2) {
+      playSound("/audio/match-number-game.wav", () => {});
+    } else if (step === STEPS.PICK_1 || step === STEPS.PICK_2) {
+      playSound("/audio/choose-correct-number.wav", () => {});
+    } else if (step === STEPS.COMPARE_1 || step === STEPS.COMPARE_2) {
+      // Fix the audio file selection - play the opposite audio
+      const audioFile = comparisonType === "bigger" ? 
+        "/audio/choose-smaller-number.wav" : 
+        "/audio/choose-bigger-number.wav";
+      playSound(audioFile, () => {});
+    } else if (step === STEPS.WRITE_UPLOAD_1 || step === STEPS.WRITE_UPLOAD_2) {
+      playSound("/audio/write-and-upload.wav", () => {});
+    } else if (step === STEPS.COMPLETION) {
+      playSound("/audio/end-of-lesson.wav", () => {});
+    }
+
     if (step === STEPS.MATCHING_1 || step === STEPS.MATCHING_2) {
       // Shuffle and prepare matching game
       const shuffledNumbers = shuffleArray([...numbers]);
@@ -127,7 +144,10 @@ export default function Lesson1Page() {
       );
       setLeftNumber(num1);
       setRightNumber(num2);
-      setComparisonType(comparisonType === "bigger" ? "smaller" : "bigger");
+      setComparisonType(step === STEPS.COMPARE_1 ? 
+        (Math.random() > 0.5 ? "bigger" : "smaller") : 
+        (comparisonType === "bigger" ? "smaller" : "bigger")
+      );
     } else if (step === STEPS.WRITE_UPLOAD_1) {
       // Set up first writing task
       setCurrentWriteNumber(Math.floor(Math.random() * 5) + 1);
@@ -194,6 +214,9 @@ export default function Lesson1Page() {
         setIsCorrect(true);
         setShowFeedback(true);
 
+        // Play correct answer sound
+        playSound("/audio/correct-answer.wav", () => {});
+
         // Add to matched pairs
         setMatchedPairs((prev) => [...prev, matchingNumbers[numberIdx]]);
 
@@ -220,6 +243,9 @@ export default function Lesson1Page() {
         // Not a match
         setIsCorrect(false);
         setShowFeedback(true);
+
+        // Play wrong answer sound
+        playSound("/audio/wrong-answer.wav", () => {});
 
         // Reset selected indices after delay
         setTimeout(() => {
@@ -330,7 +356,7 @@ export default function Lesson1Page() {
 
             <div className="flex justify-center mt-10">
               <AudioButton
-                audioSrc="/audio/welcome-home.wav"
+                audioSrc="/audio/start-next-lesson.wav"
                 onAction={() => setStep(STEPS.MATCHING_1)}
                 className="px-8 py-2"
               >

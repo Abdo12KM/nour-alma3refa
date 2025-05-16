@@ -74,7 +74,7 @@ export default function NumbersLessonPage() {
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-10">
             {/* Lesson 1: Numbers 1-5 */}
             <AudioButton
-              audioSrc="/audio/start-numbers-lesson.wav"
+              audioSrc="/audio/to-start-lesson-one.wav"
               onAction={() => router.push("/lessons/numbers/lesson1")}
               className="bg-card border-2 border-primary hover:bg-primary/10 p-8 md:p-10 rounded-xl flex flex-col items-center justify-center gap-5 transition-all duration-300 shadow-md hover:shadow-lg"
               showSoundIcon={false}
@@ -85,7 +85,7 @@ export default function NumbersLessonPage() {
 
             {/* Lesson 2: Numbers 6-10 */}
             <AudioButton
-              audioSrc="/audio/start-numbers-lesson.wav"
+              audioSrc="/audio/to-start-lesson-two.wav"
               onAction={() => router.push("/lessons/numbers/lesson2")}
               className="bg-card border-2 border-primary hover:bg-primary/10 p-8 md:p-10 rounded-xl flex flex-col items-center justify-center gap-5 transition-all duration-300 shadow-md hover:shadow-lg"
               showSoundIcon={false}
@@ -98,7 +98,7 @@ export default function NumbersLessonPage() {
 
             {/* Review section */}
             <AudioButton
-              audioSrc="/audio/start-numbers-lesson.wav"
+              audioSrc="/audio/to-start-lesson-revision.wav"
               onAction={() => router.push("/lessons/numbers/recap")}
               className="bg-card border-2 border-primary hover:bg-primary/10 p-8 md:p-10 rounded-xl flex flex-col items-center justify-center gap-5 transition-all duration-300 shadow-md hover:shadow-lg"
               showSoundIcon={false}
