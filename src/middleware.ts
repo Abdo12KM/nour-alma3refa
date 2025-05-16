@@ -7,13 +7,11 @@ const authenticatedPaths = [
   "/progress", 
   "/learn",
   "/api/users",
-  "/api/text-to-speech",
-  "/api/speech-to-text",
   "/api/detect-letter"
 ];
 
 // Public endpoints that don't require authentication
-const publicPaths = ["/login", "/register", "/api/auth"];
+const publicPaths = ["/login", "/register", "/api/auth", "/api/text-to-speech", "/api/speech-to-text"];
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {

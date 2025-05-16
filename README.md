@@ -1,6 +1,6 @@
 # Nour al-Ma'rifa (نور المعرفة) - Light of Knowledge
 
-A Progressive Web App (PWA) aimed at addressing foundational illiteracy in Egypt through an innovative, voice-centric, and gamified learning experience for illiterate and semi-literate Egyptian adults.
+A Web App aimed at addressing foundational illiteracy in Egypt through an innovative, voice-centric, and gamified learning experience for illiterate and semi-literate Egyptian adults.
 
 ## Project Vision
 
@@ -9,9 +9,9 @@ Nour al-Ma'rifa addresses the challenge of foundational illiteracy in Egypt by o
 ## Key Features
 
 - **Voice-First Interaction**: Uses clear audio prompts in Egyptian Arabic for navigation, lessons, instructions, and feedback.
-- **AI-Powered Personalization**: Generates culturally relevant examples and processes user voice inputs for feedback.
-- **Accessible UI/UX**: Large icons, high contrast colors, minimal text, and simple navigation.
-- **Gamification**: Points, badges, and progress tracking to boost motivation.
+- **AI-Powered Personalization**: Generates culturally relevant examples and processes user voice inputs for feedback. (Coming soon)
+- **Accessible UI/UX**: Clear icons, high contrast colors, minimal text, and simple navigation.
+- **Gamification**: Points, badges, and progress tracking to boost motivation. (Coming soon)
 - **Dual Authentication System**:
   - Text-based registration and login with name, PIN, and unique ID
   - Voice-based registration and login for users who cannot read
